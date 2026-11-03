@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratorio de Estadística Aplicada · Actividad física y hábitos de sueño</title>
+<style>
+:root{
+  --bg:#F8FAFC;
+  --card:#FFFFFF;
+  --azul:#245B70;
+  --verde:#6B9B83;
+  --amarillo:#F2C66D;
+  --texto:#263238;
+  --texto2:#64748B;
+  --borde:#E2E8F0;
+  --sombra:0 1px 2px rgba(36,91,112,.06), 0 10px 26px rgba(36,91,112,.07);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--texto);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.6}
+h1,h2,h3,h4{color:var(--azul);line-height:1.3;margin:0 0 .5em}
+h1{font-size:1.85rem;letter-spacing:-.01em}
+h2{font-size:1.4rem}
+h3{font-size:1.08rem;margin-top:1.5em}
+h4{font-size:1rem}
+p{margin:.55em 0}
+strong{color:#1B2B31}
+a{color:var(--azul)}
+
+/* ---------- Navegación ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);border-bottom:1px solid var(--borde)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:8px 16px 6px;display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;gap:10px;align-items:center;text-decoration:none}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:var(--azul);position:relative;flex:0 0 auto}
+.brand-mark::after{content:"";position:absolute;left:6px;right:6px;top:6px;height:3px;background:var(--amarillo);box-shadow:0 6px 0 var(--verde),0 12px 0 #FFFFFF}
+.brand strong{display:block;color:var(--azul);font-size:.97rem;line-height:1.2}
+.brand small{display:block;color:var(--texto2);font-size:.76rem}
+.links{display:flex;gap:4px;overflow-x:auto;padding-bottom:2px}
+.links a{white-space:nowrap;text-decoration:none;color:var(--texto2);font-size:.84rem;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid transparent}
+.links a:hover{background:#EEF4F7;color:var(--azul)}
+.links a.active{background:#E7F0F4;color:var(--azul);border-color:#C8DCE6}
+
+/* ---------- Estructura ---------- */
+main{max-width:1180px;margin:0 auto;padding:22px 16px 40px}
+.seccion{background:var(--card);border:1px solid var(--borde);border-radius:16px;padding:24px;margin-bottom:22px;box-shadow:var(--sombra);scroll-margin-top:104px}
+.titulo-seccion{display:flex;align-items:center;gap:10px}
+.titulo-seccion::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--amarillo);flex:0 0 auto}
+.lead{color:var(--texto2);font-size:.97rem;max-width:78ch}
+.sub{color:var(--texto2);font-size:.86rem}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.tarjeta{background:#FFFFFF;border:1px solid var(--borde);border-radius:12px;padding:14px 16px}
+.tarjeta.tono{background:#F8FAFC}
+.tarjeta h3,.tarjeta h4{margin-top:0}
+.tarjeta p:last-child{margin-bottom:0}
+
+/* ---------- Chips y etiquetas ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:999px;border:1px solid #CFE0E8;background:#EDF4F7;color:#245B70}
+.chip.verde{background:#EFF6F2;border-color:#CFE3D9;color:#3F6B57}
+.chip.amarillo{background:#FDF6E7;border-color:#F2C66D;color:#7A5A17}
+.chip.gris{background:#F1F5F9;border-color:#DCE3EA;color:#475569}
+.chip .punto{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.75}
+
+/* ---------- Botones y controles ---------- */
+.acciones{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:12px 0}
+.btn{background:var(--azul);color:#fff;border:1px solid var(--azul);padding:9px 15px;border-radius:9px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:#1C4A5C}
+.btn.sec{background:#fff;color:var(--azul);border-color:#B9CEDA}
+.btn.sec:hover{background:#EEF4F7}
+.btn.verde{background:var(--verde);border-color:var(--verde);color:#fff}
+.btn.verde:hover{background:#5C8B73}
+.btn.amarillo{background:var(--amarillo);border-color:var(--amarillo);color:#4A3A12}
+.btn:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #F2C66D;outline-offset:1px}
+.campo{display:flex;flex-direction:column;gap:4px}
+.campo label{font-size:.8rem;font-weight:700;color:var(--azul);letter-spacing:.01em}
+.campo input,.campo select,.control select,.control input{width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:9px;font-size:.9rem;background:#fff;color:var(--texto);font-family:inherit}
+.campo .hint{font-size:.74rem;color:var(--texto2);line-height:1.45}
+.campo .req{color:#B4531A}
+.control{display:flex;flex-direction:column;gap:4px;min-width:170px}
+.control label{font-size:.76rem;font-weight:700;color:var(--azul)}
+.controles{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;background:#F8FAFC;border:1px solid var(--borde);border-radius:12px;padding:12px 14px;margin:12px 0}
+.controles .sep{flex:1 1 10px}
+.check{display:flex;align-items:center;gap:7px;font-size:.84rem;color:var(--texto);cursor:pointer;font-weight:600}
+.check input{width:auto;accent-color:var(--azul)}
+.mensaje{border-radius:10px;padding:10px 14px;font-size:.86rem;margin:10px 0;display:none}
+.mensaje.ok{display:block;background:#EFF6F2;border:1px solid #CFE3D9;color:#35604B}
+.mensaje.err{display:block;background:#FCF1EC;border:1px solid #F0D2C4;color:#8A4B26}
+.mensaje.info{display:block;background:#EDF4F7;border:1px solid #CFE0E8;color:#245B70}
+
+/* ---------- Tablas ---------- */
+.tabla-wrap{overflow-x:auto;border:1px solid var(--borde);border-radius:10px;background:#fff}
+.tabla-scroll{overflow:auto;max-height:470px;border:1px solid var(--borde);border-radius:10px;background:#fff}
+table.datos{border-collapse:collapse;width:100%;font-size:.85rem}
+table.datos th{background:var(--azul);color:#fff;padding:9px 10px;text-align:left;font-weight:600;font-size:.78rem;letter-spacing:.02em;white-space:nowrap;position:sticky;top:0;z-index:2}
+table.datos th.num{text-align:right}
+table.datos th.ordenable{cursor:pointer;user-select:none}
+table.datos th.ordenable:hover{background:#1C4A5C}
+table.datos td{padding:7px 10px;border-bottom:1px solid #EEF2F6;vertical-align:top}
+table.datos td.num{text-align:right;font-variant-numeric:tabular-nums}
+table.datos tbody tr:nth-child(even){background:#F8FAFC}
+table.datos tbody tr:hover{background:#F1F7F9}
+table.datos tr.total td{font-weight:700;background:#EDF4F7;border-top:2px solid #C8DCE6}
+.falta{color:#94A3B8;font-style:italic}
+.marca-manual{display:inline-block;font-size:.68rem;font-weight:700;background:#FDF6E7;border:1px solid #F2C66D;color:#7A5A17;border-radius:5px;padding:0 5px;margin-left:6px}
+.pie-tabla{font-size:.78rem;color:var(--texto2);margin:.5em 0 0}
+.tabla-contenido{margin:12px 0}
+
+/* ---------- KPIs ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.kpi{background:#F8FAFC;border:1px solid var(--borde);border-left:4px solid var(--verde);border-radius:10px;padding:10px 12px}
+.kpi span{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--texto2)}
+.kpi b{display:block;font-size:1.3rem;color:var(--azul);font-variant-numeric:tabular-nums;line-height:1.25;margin-top:2px;word-break:break-word}
+.kpi small{display:block;font-size:.74rem;color:var(--texto2);margin-top:2px}
+.kpi.destacado{background:#FDF6E7;border-left-color:var(--amarillo)}
+
+/* ---------- Cajas de interpretación y avisos ---------- */
+.interp{background:#FEFBF3;border:1px solid #F2E3C4;border-left:4px solid var(--amarillo);border-radius:12px;padding:14px 18px;margin:16px 0}
+.interp h4{margin-top:0;color:#7A5A17}
+.interp ul{margin:.4em 0;padding-left:1.1em}
+.interp li{margin:.4em 0;font-size:.9rem}
+.interp li b{color:#5E4A16}
+.interp p{font-size:.9rem}
+.aviso{border-radius:10px;padding:11px 14px;font-size:.86rem;margin:12px 0;border-left:4px solid var(--texto2);background:#F1F5F9;color:#334155}
+.aviso.ok{background:#EFF6F2;border-left-color:var(--verde);color:#35604B}
+.aviso.warn{background:#FDF6E7;border-left-color:var(--amarillo);color:#6B5216}
+.aviso.error{background:#FCF1EC;border-left-color:#C2703D;color:#8A4B26}
+.aviso b{color:inherit}
+.ecuacion{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#F8FAFC;border:1px dashed #B9CEDA;border-radius:10px;padding:12px 14px;font-size:1rem;color:var(--azul);text-align:center;margin:12px 0;overflow-x:auto}
+.formula{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#F1F5F9;border-radius:7px;padding:2px 7px;font-size:.85rem;color:#334155;white-space:nowrap}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#F1F5F9;border-radius:5px;padding:1px 5px;font-size:.85em;color:#334155}
+
+/* ---------- Gráficos ---------- */
+
+.chart-card{background:#FFFFFF;border:1px solid var(--borde);border-radius:14px;padding:16px 18px;margin:16px 0}
+.chart-card h3{margin-top:0}
+.chart-canvas{width:100%;display:block}
+.leyenda{display:flex;flex-wrap:wrap;gap:12px;font-size:.78rem;color:var(--texto2);margin-top:6px}
+.leyenda span{display:inline-flex;align-items:center;gap:6px}
+.leyenda i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.nota-grafico{font-size:.8rem;color:var(--texto2);margin:.4em 0 0}
+
+/* ---------- Pie de página ---------- */
+footer{background:#FFFFFF;border-top:1px solid var(--borde);padding:22px 16px 34px;color:var(--texto2);font-size:.82rem}
+footer .pie-inner{max-width:1180px;margin:0 auto}
+footer strong{color:var(--azul)}
+
+/* ---------- Utilidades ---------- */
+.lista-limpia{margin:.4em 0;padding-left:1.1em}
+.lista-limpia li{margin:.35em 0;font-size:.9rem}
+.dos-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.barra-progreso{height:9px;background:#EDF2F6;border-radius:999px;overflow:hidden;min-width:70px}
+.barra-progreso i{display:block;height:100%;background:var(--verde)}
+.vacio{background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:10px;padding:18px;text-align:center;color:var(--texto2);font-size:.88rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- Responsivo ---------- */
+@media (max-width:760px){
+  body{font-size:14.5px}
+  .seccion{padding:16px 14px;border-radius:13px}
+  h1{font-size:1.45rem}
+  h2{font-size:1.2rem}
+  .nav-inner{padding:7px 12px 5px}
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}
+  .kpi b{font-size:1.12rem}
+  .controles{padding:10px}
+  .control{min-width:140px;flex:1 1 140px}
+  main{padding:16px 10px 30px}
+}
+
+/* ---------- Impresión ---------- */
+@media print{
+  body{background:#fff;font-size:11.5px}
+  .nav,.acciones,.controles,.no-print,.btn,select,input,footer .btn{display:none !important}
+  .seccion{box-shadow:none;border:1px solid #CBD5E1;break-inside:auto;page-break-inside:avoid;margin-bottom:14px;padding:12px}
+  .tabla-scroll,.tabla-wrap{max-height:none !important;overflow:visible !important}
+  table.datos th{background:#245B70 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .chart-card,.interp,.aviso{break-inside:avoid;page-break-inside:avoid}
+  a{text-decoration:none;color:inherit}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#inicio">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>
+        <strong>Laboratorio de Estadística Aplicada</strong>
+        <small>Actividad física y hábitos de sueño · unidad didáctica interactiva</small>
+      </span>
+    </a>
+    <nav class="links" id="navLinks" aria-label="Secciones de la aplicación">
+      <a href="#inicio">Inicio</a>
+      <a href="#cuestionario">Cuestionario</a>
+      <a href="#datos">Base de datos</a>
+      <a href="#frecuencias">Frecuencias</a>
+      <a href="#descriptiva">Descriptiva</a>
+      <a href="#pruebas">Pruebas estadísticas</a>
+      <a href="#graficos">Gráficos</a>
+      <a href="#interpretaciones">Interpretaciones</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================ INICIO ============================ -->
+<section class="seccion" id="inicio">
+  <h2 class="titulo-seccion">Inicio · Diseño de la investigación</h2>
+  <p class="lead">
+    Esta aplicación es un <strong>laboratorio virtual de estadística</strong> construido sobre un tema concreto:
+    la relación entre la <strong>actividad física</strong> y los <strong>hábitos de sueño</strong>. Aquí encontrarás un
+    cuestionario, una base de datos de ejemplo, distribuciones de frecuencias, estadística descriptiva,
+    pruebas de asociación, correlación, regresión y gráficos, todo calculado en tiempo real sobre los datos visibles.
+  </p>
+
+  <div class="chips" id="chipsInicio"></div>
+
+  <div class="grid g3">
+    <div class="tarjeta tono">
+      <h3>Objetivo estadístico</h3>
+      <p class="sub">Describir el perfil de actividad física y de sueño de los participantes, medir la dispersión y
+      localizar los valores centrales, y <strong>evaluar si existe una asociación estadísticamente significativa</strong>
+      entre el nivel de actividad física y los hábitos de sueño, así como cuánta de la variabilidad del sueño
+      se explica linealmente por la actividad física.</p>
+    </div>
+    <div class="tarjeta tono">
+      <h3>Pregunta de investigación</h3>
+      <p class="sub">¿Las personas con mayor cantidad e intensidad de actividad física presentan diferencias en la
+      <strong>cantidad y la calidad percibida del sueño</strong> respecto de las personas menos activas?</p>
+      <p class="sub"><strong>Hipótesis de trabajo:</strong> a mayor actividad física se observan más horas de sueño y
+      mejor percepción de su calidad. Esta hipótesis se someterá a prueba; los resultados pueden confirmarla o refutarla.</p>
+    </div>
+    <div class="tarjeta tono">
+      <h3>Diseño del estudio</h3>
+      <p class="sub">Estudio <strong>observacional, transversal y correlacional</strong>, con medición única en el tiempo.
+      Muestra no probabilística por conveniencia. Todas las variables se miden por <strong>autorreporte</strong> mediante
+      cuestionario. La asociación detectada <strong>no implica causalidad</strong>.</p>
+    </div>
+  </div>
+
+  <h3>Variables de la investigación</h3>
+  <p class="sub">Cada variable aparece con su identificador, la pregunta que la mide, su tipo, su escala de medición y
+  la forma en que se codifica. Esta codificación es la que se usa en toda la aplicación.</p>
+  <div id="tablaVariables" class="tabla-contenido"></div>
+
+  <div class="grid g2">
+    <div class="tarjeta">
+      <h4>Técnicas estadísticas aplicables</h4>
+      <ul class="lista-limpia">
+        <li><strong>Distribuciones de frecuencia</strong> — absolutas, relativas, acumuladas, intervalos y marcas de clase.</li>
+        <li><strong>Estadística descriptiva</strong> — centralidad, dispersión, cuartiles y percentiles.</li>
+        <li><strong>Tabla de contingencia y chi-cuadrado</strong> — asociación entre dos variables cualitativas.</li>
+        <li><strong>Correlación de Pearson</strong> — fuerza y dirección de la relación lineal entre dos variables cuantitativas.</li>
+        <li><strong>Regresión lineal simple</strong> — modelo predictivo con pendiente, intercepto y R².</li>
+        <li><strong>Gráficos</strong> — barras, histograma, polígono, circular, dispersión y recta de regresión.</li>
+      </ul>
+    </div>
+    <div class="tarjeta">
+      <h4>Cómo usar esta aplicación</h4>
+      <ul class="lista-limpia">
+        <li>Al abrir la página ya verás <strong>una base de ejemplo y todos sus resultados</strong>: no es necesario programar ni cargar datos.</li>
+        <li>Puedes <strong>ordenar y filtrar</strong> la tabla, <strong>generar una nueva muestra</strong> o <strong>descargar el CSV</strong>.</li>
+        <li>Cada procedimiento termina con una sección <strong>«¿Cómo se interpreta?»</strong>.</li>
+        <li>Los controles de cada sección cambian el análisis; <strong>todos los resultados y gráficos se recalculan</strong>.</li>
+        <li>Usa el botón <strong>Imprimir</strong> para exportar la vista a PDF desde el navegador.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="aviso warn">
+    <strong>Aviso sobre los datos:</strong> la base de carga es <strong>100 % sintética</strong>, generada
+    aleatoriamente con fines educativos. No representa a ninguna persona ni a ninguna población real, y no debe
+    usarse para extraer conclusiones clínicas, epidemiológicas o deportivas. Sus relaciones internas son moderadas
+    a propósito, para que el análisis requiera interpretación y no produzca respuestas evidentes por construcción.
+  </div>
+</section>
+
+<!-- ============================ CUESTIONARIO ============================ -->
+<section class="seccion" id="cuestionario">
+  <h2 class="titulo-seccion">Cuestionario</h2>
+  <p class="lead">
+    Cuestionario de <strong>14 preguntas</strong> diseñadas para construir la base de datos del estudio. Incluye variables
+    cualitativas (nominales y ordinales) y variables cuantitativas (razón). Cada campo indica el tipo de variable,
+    la escala de medición y cómo se codifica la respuesta.
+  </p>
+
+  <div class="grid g2">
+    <div class="tarjeta tono">
+      <h4>Identificación de las variables</h4>
+      <ul class="lista-limpia">
+        <li><strong>Cualitativas nominales:</strong> <code>sexo</code>, <code>ocupacion</code> — categorías sin orden.</li>
+        <li><strong>Cualitativas ordinales:</strong> <code>af_int</code>, <code>calidad</code>, <code>somnolencia</code> — categorías con orden lógico; se codifican 1, 2, 3… en orden creciente.</li>
+        <li><strong>Cuantitativas discretas:</strong> <code>edad</code>, <code>af_dias</code>, <code>despertares</code>, <code>cafeina</code>, <code>estres</code> — valores enteros.</li>
+        <li><strong>Cuantitativas continuas:</strong> <code>af_min</code>, <code>horas_sueno</code>, <code>latencia</code>, <code>pantalla</code> — valores con decimales.</li>
+      </ul>
+      <p class="sub">Los campos marcados con <span class="req">*</span> son obligatorios porque son imprescindibles
+      para los análisis principales (frecuencias, chi-cuadrado, correlación y regresión).</p>
+    </div>
+    <div class="tarjeta tono">
+      <h4>Reglas de respuesta</h4>
+      <ul class="lista-limpia">
+        <li>Los valores numéricos deben estar dentro del rango indicado bajo cada campo; si no lo están, se muestra un error y no se registra.</li>
+        <li>Los campos no obligatorios pueden dejarse en blanco: se guardarán como <strong>dato faltante</strong> y aparecerán como «—» en la tabla, permitiendo estudiar su efecto en los cálculos.</li>
+        <li>Cada registro agregado manualmente se marca con la etiqueta <strong>manual</strong> en la base de datos.</li>
+        <li>Puedes agregar cuantos registros quieros; todos entran en los cálculos al instante.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Registro de respuestas</h3>
+  <form id="formCuestionario" novalidate>
+    <div class="grid g2" id="camposForm"></div>
+    <div class="acciones">
+      <button type="submit" class="btn verde">Agregar registro a la base</button>
+      <button type="reset" class="btn sec">Limpiar el formulario</button>
+      <span class="sub" id="conteoManual"></span>
+    </div>
+  </form>
+  <div class="mensaje" id="msgForm" role="status"></div>
+</section>
+
+<!-- ============================ BASE DE DATOS ============================ -->
+<section class="seccion" id="datos">
+  <h2 class="titulo-seccion">Base de datos sintética</h2>
+  <p class="lead">
+    Muestra inicial de <strong>registros simulados</strong> con variabilidad suficiente para practicar estadística.
+    La tabla es interactiva: haz clic en un encabezado para <strong>ordenar</strong> por esa columna, usa el buscador
+    o el filtro por categoría para <strong>seleccionar registros</strong>, genera una <strong>nueva muestra</strong>
+    o <strong>descarga el CSV</strong>. Todos los resultados de la aplicación se recalculan con esta base.
+  </p>
+
+  <div class="acciones no-print">
+    <div class="control">
+      <label for="inpN">Tamaño de la muestra (40–200)</label>
+      <input type="number" id="inpN" min="40" max="200" step="1" value="80">
+    </div>
+    <button class="btn" id="btnNueva">Generar nueva muestra</button>
+    <button class="btn sec" id="btnRestaurar">Restaurar muestra inicial</button>
+    <button class="btn sec" id="btnCSV">Descargar CSV</button>
+    <button class="btn sec" id="btnImprimir">Imprimir</button>
+  </div>
+
+  <div class="chips" id="chipsDatos"></div>
+
+  <div class="controles no-print">
+    <div class="control" style="min-width:220px">
+      <label for="inpBuscar">Buscar texto en cualquier campo</label>
+      <input type="search" id="inpBuscar" placeholder="p. ej. Moderada, estudiante, 45…">
+    </div>
+    <div class="control">
+      <label for="selFiltroVar">Filtrar por categoría</label>
+      <select id="selFiltroVar"></select>
+    </div>
+    <div class="control">
+      <label for="selFiltroValor">Valor</label>
+      <select id="selFiltroValor"></select>
+    </div>
+    <div class="control">
+      <label>&nbsp;</label>
+      <button class="btn sec" id="btnLimpiarFiltro">Limpiar filtros</button>
+    </div>
+    <div class="sep"></div>
+    <div class="control">
+      <label>&nbsp;</label>
+      <span class="sub" id="conteoFiltrado"></span>
+    </div>
+  </div>
+
+  <div class="tabla-scroll" id="contenedorTabla">
+    <table class="datos" id="tablaDatos"></table>
+  </div>
+  <p class="pie-tabla">
+    Columnas ordenables: haz clic en cualquier encabezado para alternar entre orden ascendente (▲) y descendente (▼).
+    Los valores vacíos se muestran como «—» y se excluyen de los cálculos correspondientes.
+  </p>
+</section>
+
+<!-- ============================ FRECUENCIAS ============================ -->
+<section class="seccion" id="frecuencias">
+  <h2 class="titulo-seccion">Distribuciones de frecuencia</h2>
+  <p class="lead">
+    Selecciona una variable para obtener su tabla de frecuencias calculada sobre la base visible.
+    Las variables cualitativas generan una tabla de categorías; las variables cuantitativas se agrupan en
+    <strong>intervalos</strong> (criterio de Sturges) con su <strong>marca de clase</strong>, frecuencias absolutas,
+    relativas y acumuladas.
+  </p>
+
+  <div class="controles no-print">
+    <div class="control" style="min-width:280px">
+      <label for="selFrecVar">Variable a tabular</label>
+      <select id="selFrecVar"></select>
+    </div>
+    <div class="sep"></div>
+    <div class="control">
+      <label>Tipo de tabla</label>
+      <span class="chip" id="tipoFrec">—</span>
+    </div>
+  </div>
+
+  <div id="frecResultado"></div>
+</section>
+
+<!-- ============================ ESTADÍSTICA DESCRIPTIVA ============================ -->
+<section class="seccion" id="descriptiva">
+  <h2 class="titulo-seccion">Estadística descriptiva</h2>
+  <p class="lead">
+    Medidas de <strong>centralidad</strong> (media, mediana, moda), <strong>dispersión</strong> (mínimo, máximo, rango,
+    varianza y desviación estándar muestrales) y <strong>posición</strong> (cuartiles y percentiles seleccionados)
+    de una variable cuantitativa. Todo se calcula con los valores válidos de la base visible.
+  </p>
+
+  <div class="controles no-print">
+    <div class="control" style="min-width:280px">
+      <label for="selDescVar">Variable cuantitativa</label>
+      <select id="selDescVar"></select>
+    </div>
+    <div class="sep"></div>
+    <div class="control">
+      <label>Unidad de medida</label>
+      <span class="chip" id="unidadDesc">—</span>
+    </div>
+  </div>
+
+  <div id="descResultado"></div>
+</section>
+
+<!-- ============================ PRUEBAS ============================ -->
+<section class="seccion" id="pruebas">
+  <h2 class="titulo-seccion">Pruebas estadísticas</h2>
+  <p class="lead">
+    Tres procedimientos inferenciales aplicados a la base visible: <strong>chi-cuadrado</strong> de independencia
+    (dos variables cualitativas), <strong>correlación de Pearson</strong> y <strong>regresión lineal simple</strong>
+    (dos variables cuantitativas). Cada uno enuncia sus hipótesis, reporta el estadístico, los grados de libertad,
+    el valor p, verifica los supuestos y termina con su interpretación.
+  </p>
+
+  <!-- ---- Chi cuadrado ---- -->
+  <div class="chart-card">
+    <h3>1 · Tabla de contingencia y prueba chi-cuadrado</h3>
+    <p class="sub">Asociación entre dos variables cualitativas. Se contrasta la independencia de ambas variables.</p>
+    <div class="controles no-print">
+      <div class="control" style="min-width:230px">
+        <label for="selChiFila">Variable de las filas</label>
+        <select id="selChiFila"></select>
+      </div>
+      <div class="control" style="min-width:230px">
+        <label for="selChiCol">Variable de las columnas</label>
+        <select id="selChiCol"></select>
+      </div>
+      <div class="control" style="min-width:130px">
+        <label for="selAlfa">Nivel de significación α</label>
+        <select id="selAlfa">
+          <option value="0.10">0,10</option>
+          <option value="0.05" selected>0,05</option>
+          <option value="0.01">0,01</option>
+        </select>
+      </div>
+    </div>
+    <div id="chiResultado"></div>
+  </div>
+
+  <!-- ---- Correlación ---- -->
+  <div class="chart-card">
+    <h3>2 · Correlación de Pearson</h3>
+    <p class="sub">Relación lineal entre dos variables cuantitativas. Se usa la <strong>correlación de Pearson</strong>
+    porque ambas variables se miden en escala de razón y se asume una relación lineal.</p>
+    <div class="controles no-print">
+      <div class="control" style="min-width:250px">
+        <label for="selCorrX">Variable X (independiente)</label>
+        <select id="selCorrX"></select>
+      </div>
+      <div class="control" style="min-width:250px">
+        <label for="selCorrY">Variable Y (dependiente)</label>
+        <select id="selCorrY"></select>
+      </div>
+      <div class="control">
+        <label>Unidades</label>
+        <span class="chip" id="unidCorr">—</span>
+      </div>
+    </div>
+    <div id="corrResultado"></div>
+  </div>
+
+  <!-- ---- Regresión ---- -->
+  <div class="chart-card">
+    <h3>3 · Regresión lineal simple</h3>
+    <p class="sub">Modelo <span class="formula">ŷ = b₀ + b₁·x</span> ajustado por mínimos cuadrados. Se reportan la
+    pendiente, el intercepto, el coeficiente de determinación R², la tabla de valores observados y estimados, y una
+    predicción prudente dentro del rango observado.</p>
+    <div class="controles no-print">
+      <div class="control" style="min-width:250px">
+        <label for="selRegX">Variable X (predictor)</label>
+        <select id="selRegX"></select>
+      </div>
+      <div class="control" style="min-width:250px">
+        <label for="selRegY">Variable Y (respuesta)</label>
+        <select id="selRegY"></select>
+      </div>
+    </div>
+    <div id="regResultado"></div>
+    <div class="controles no-print">
+      <div class="control" style="min-width:220px">
+        <label for="inpPredX">Valor de X para predecir ŷ</label>
+        <input type="number" id="inpPredX" step="any" placeholder="ingresa un valor">
+      </div>
+      <div class="control">
+        <label>&nbsp;</label>
+        <button class="btn" id="btnPredecir">Predecir ŷ</button>
+      </div>
+      <div class="sep"></div>
+      <div class="control">
+        <label>&nbsp;</label>
+        <span class="sub" id="rangoX"></span>
+      </div>
+    </div>
+    <div id="predResultado"></div>
+  </div>
+</section>
+
+<!-- ============================ GRÁFICOS ============================ -->
+<section class="seccion" id="graficos">
+  <h2 class="titulo-seccion">Tablas y gráficos</h2>
+  <p class="lead">
+    Cinco representaciones vinculadas directamente con la base de datos. Todas se redibujan cuando cambias de
+    variable o cuando generas una nueva muestra. Cada gráfico incluye título, etiquetas con unidades y una
+    interpretación breve.
+  </p>
+
+  <div class="chart-card">
+    <h3>Gráfico de barras · frecuencias por categoría</h3>
+    <div class="controles no-print">
+      <div class="control" style="min-width:280px">
+        <label for="selBarVar">Variable cualitativa</label>
+        <select id="selBarVar"></select>
+      </div>
+    </div>
+    <canvas id="cvBarra" class="chart-canvas" height="320" aria-label="Gráfico de barras"></canvas>
+    <p class="leyenda" id="leyBarra"></p>
+    <p class="nota-grafico" id="interpBarra"></p>
+  </div>
+
+  <div class="chart-card">
+    <h3>Histograma y polígono de frecuencias</h3>
+    <div class="controles no-print">
+      <div class="control" style="min-width:280px">
+        <label for="selHistVar">Variable cuantitativa</label>
+        <select id="selHistVar"></select>
+      </div>
+      <label class="check"><input type="checkbox" id="chkPoligono"> Superponer polígono de frecuencias</label>
+    </div>
+    <canvas id="cvHist" class="chart-canvas" height="330" aria-label="Histograma"></canvas>
+    <p class="leyenda" id="leyHist"></p>
+    <p class="nota-grafico" id="interpHist"></p>
+  </div>
+
+  <div class="chart-card">
+    <h3>Gráfico circular · composición porcentual</h3>
+    <div class="controles no-print">
+      <div class="control" style="min-width:280px">
+        <label for="selPieVar">Variable cualitativa</label>
+        <select id="selPieVar"></select>
+      </div>
+    </div>
+    <canvas id="cvPie" class="chart-canvas" height="330" aria-label="Gráfico circular"></canvas>
+    <p class="leyenda" id="leyPie"></p>
+    <p class="nota-grafico" id="interpPie"></p>
+  </div>
+
+  <div class="chart-card">
+    <h3>Diagrama de dispersión y recta de regresión</h3>
+    <div class="controles no-print">
+      <div class="control" style="min-width:250px">
+        <label for="selScX">Eje X</label>
+        <select id="selScX"></select>
+      </div>
+      <div class="control" style="min-width:250px">
+        <label for="selScY">Eje Y</label>
+        <select id="selScY"></select>
+      </div>
+    </div>
+    <canvas id="cvDisp" class="chart-canvas" height="350" aria-label="Diagrama de dispersión"></canvas>
+    <p class="leyenda" id="leyDisp"></p>
+    <p class="nota-grafico" id="interpDisp"></p>
+  </div>
+
+  <div class="chart-card">
+    <h3>Comparación visual · media de una variable según una categoría</h3>
+    <div class="controles no-print">
+      <div class="control" style="min-width:250px">
+        <label for="selCompCat">Variable cualitativa (grupos)</label>
+        <select id="selCompCat"></select>
+      </div>
+      <div class="control" style="min-width:250px">
+        <label for="selCompCuan">Variable cuantitativa (a comparar)</label>
+        <select id="selCompCuan"></select>
+      </div>
+    </div>
+    <canvas id="cvComp" class="chart-canvas" height="320" aria-label="Comparación de medias"></canvas>
+    <p class="leyenda" id="leyComp"></p>
+    <p class="nota-grafico" id="interpComp"></p>
+  </div>
+</section>
+
+<!-- ============================ INTERPRETACIONES ============================ -->
+<section class="seccion" id="interpretaciones">
+  <h2 class="titulo-seccion">Interpretaciones y conclusiones</h2>
+  <p class="lead">
+    Síntesis de los resultados obtenidos sobre la base visible. Las frases se generan con los números reales del
+    análisis, de modo que nunca contradicen los datos mostrados en las secciones anteriores.
+  </p>
+  <div id="conclusiones"></div>
+</section>
+
+</main>
+
+<footer>
+  <div class="pie-inner">
+    <p><strong>Laboratorio de Estadística Aplicada · Actividad física y hábitos de sueño.</strong>
+    Aplicación educativa de un solo archivo: HTML + CSS + JavaScript nativos, sin bibliotecas externas.</p>
+    <p>Los datos de carga son <strong>sintéticos y simulados</strong> con fines didácticos; no representan a ninguna
+    población real. Los estadísticos se calculan en vivo sobre la base visible: si cambias la muestra, cambian todos los
+    resultados, tablas y gráficos. Nivel de significación por defecto α = 0,05. La correlación y la regresión describen
+    relaciones <strong>lineales</strong> y <strong>no demuestran causalidad</strong>.</p>
+    <p>Para obtener una copia en papel o en PDF usa el botón <strong>Imprimir</strong> de la sección «Base de datos».</p>
+  </div>
+</footer>
+
+<noscript>
+  <div class="aviso error" style="max-width:1180px;margin:20px auto">
+    Esta aplicación necesita JavaScript activado para calcular estadísticas y dibujar los gráficos.
+  </div>
+</noscript>
+
+<script>
+/* ============================================================
+   BLOQUE A · Definición de variables, datos sintéticos y
+   funciones estadísticas puras (no dependen del DOM)
+   ============================================================ */
+
+const VARS = [
+  {id:'edad', nombre:'Edad', pregunta:'¿Cuál es tu edad?', tipo:'Cuantitativa', escala:'Razón', unidad:'años', cat:false, min:17, max:62, step:1, dec:0, req:true},
+  {id:'sexo', nombre:'Sexo', pregunta:'¿Con qué sexo te identificas?', tipo:'Cualitativa', escala:'Nominal', cat:true, niveles:['Femenino','Masculino','Otro']},
+  {id:'ocupacion', nombre:'Ocupación', pregunta:'¿Cuál es tu ocupación principal?', tipo:'Cualitativa', escala:'Nominal', cat:true, niveles:['Estudiante','Trabajador','Estudiante y trabajador','Otro']},
+  {id:'af_min', nombre:'Actividad física semanal', pregunta:'¿Cuántos minutos de actividad física acumulas en una semana?', tipo:'Cuantitativa', escala:'Razón', unidad:'min/semana', cat:false, min:0, max:1000, step:5, dec:0, req:true},
+  {id:'af_dias', nombre:'Días de actividad física', pregunta:'¿En cuántos días de la semana haces al menos 30 minutos de actividad física?', tipo:'Cuantitativa', escala:'Razón (discreta)', unidad:'días/semana', cat:false, min:0, max:7, step:1, dec:0},
+  {id:'af_int', nombre:'Intensidad de la actividad', pregunta:'¿Con qué intensidad suele ser tu actividad física?', tipo:'Cualitativa', escala:'Ordinal', cat:true, niveles:['Ligera','Moderada','Intensa']},
+  {id:'horas_sueno', nombre:'Horas de sueño', pregunta:'¿Cuántas horas duermes por noche en promedio?', tipo:'Cuantitativa', escala:'Razón', unidad:'horas/noche', cat:false, min:3, max:12, step:0.5, dec:1, req:true},
+  {id:'latencia', nombre:'Latencia del sueño', pregunta:'¿Cuántos minutos tardas en dormirte después de acostarte?', tipo:'Cuantitativa', escala:'Razón', unidad:'minutos', cat:false, min:0, max:180, step:1, dec:0},
+  {id:'despertares', nombre:'Despertares nocturnos', pregunta:'¿Cuántas veces despiertas durante la noche?', tipo:'Cuantitativa', escala:'Razón (discreta)', unidad:'veces/noche', cat:false, min:0, max:6, step:1, dec:0},
+  {id:'calidad', nombre:'Calidad del sueño', pregunta:'¿Cómo percibes la calidad de tu sueño?', tipo:'Cualitativa', escala:'Ordinal', cat:true, niveles:['Mala','Regular','Buena','Muy buena'], req:true},
+  {id:'somnolencia', nombre:'Somnolencia diurna', pregunta:'¿Con qué frecuencia sientes somnolencia durante el día?', tipo:'Cualitativa', escala:'Ordinal', cat:true, niveles:['Nunca','Leve','Moderada','Intensa']},
+  {id:'cafeina', nombre:'Cafeína diaria', pregunta:'¿Cuántas tazas de café, té o bebida con cafeína tomas al día?', tipo:'Cuantitativa', escala:'Razón (discreta)', unidad:'tazas/día', cat:false, min:0, max:8, step:1, dec:0},
+  {id:'pantalla', nombre:'Pantalla antes de dormir', pregunta:'¿Cuántos minutos usas pantallas en la hora previa a dormir?', tipo:'Cuantitativa', escala:'Razón', unidad:'minutos', cat:false, min:0, max:180, step:5, dec:0},
+  {id:'estres', nombre:'Estrés percibido', pregunta:'¿Qué nivel de estrés percibes (0 = nada, 10 = mucho)?', tipo:'Cuantitativa', escala:'Razón (escala)', unidad:'puntos (0-10)', cat:false, min:0, max:10, step:1, dec:0}
+];
+
+const MAP = Object.fromEntries(VARS.map(v => [v.id, v]));
+const CUANT = VARS.filter(v => !v.cat);
+const CATEG = VARS.filter(v => v.cat);
+const PALETA = ['#245B70', '#6B9B83', '#F2C66D', '#8FB3C2', '#A8C3B4', '#C97B4A', '#5E8AA6', '#B7C9A8'];
+const SEED_INICIAL = 51;
+const N_INICIAL = 80;
+
+/* ---------- Utilidades generales ---------- */
+function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+function esNumero(x) { return typeof x === 'number' && Number.isFinite(x); }
+function fmt(v, d = 2) {
+  if (v === null || v === undefined || Number.isNaN(v)) return '—';
+  return Number(v).toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+function fmtEnt(v) {
+  if (v === null || v === undefined || Number.isNaN(v)) return '—';
+  return Number(v).toLocaleString('es-ES', { maximumFractionDigits: 0 });
+}
+function fmtP(v) {
+  if (v === null || v === undefined || Number.isNaN(v)) return '—';
+  if (v < 0.001) return '< 0,001';
+  return fmt(v, 3);
+}
+function pct(v, d = 1) { return fmt(v, d) + ' %'; }
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function codificacion(v) {
+  if (!v.cat) return 'Valor numérico (' + v.unidad + ')';
+  if (v.escala === 'Ordinal') return v.niveles.map((n, i) => n + '=' + (i + 1)).join(', ');
+  return 'Categorías: ' + v.niveles.join(' | ') + ' (sin orden)';
+}
+function decimalesDe(v) { return (v && !v.cat && esNumero(v.dec)) ? v.dec : 1; }
+
+/* ---------- Generador aleatorio reproducible ---------- */
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function gauss(rnd) {
+  let u = 0, v = 0;
+  while (u === 0) u = rnd();
+  while (v === 0) v = rnd();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+function poisson(lam, rnd) {
+  if (lam <= 0) return 0;
+  const L = Math.exp(-lam);
+  let k = 0, p = 1;
+  do { k++; p *= rnd(); } while (p > L);
+  return k - 1;
+}
+
+/* ---------- Base de datos sintética ---------- */
+function generarMuestra(n, seed) {
+  const rnd = mulberry32(seed);
+  const g = () => gauss(rnd);
+  const filas = [];
+
+  for (let i = 0; i < n; i++) {
+    const zAf = g();                 /* propensión a la actividad física */
+    const zEst = g();                /* estrés base */
+    const zPant = -0.35 * zAf + 0.93 * g();  /* uso de pantalla (levemente inverso a la actividad) */
+    const zSue = g();                /* tendencia basal al sueño */
+
+    /* --- Edad y ocupación --- */
+    let edad = (rnd() < 0.55) ? (18 + Math.round(rnd() * 8)) : (24 + Math.round(rnd() * 31));
+    let ocupacion;
+    if (edad <= 26) {
+      const r = rnd();
+      ocupacion = r < 0.62 ? 'Estudiante' : (r < 0.92 ? 'Estudiante y trabajador' : 'Otro');
+    } else {
+      const r = rnd();
+      ocupacion = r < 0.86 ? 'Trabajador' : (r < 0.96 ? 'Otro' : 'Estudiante y trabajador');
+    }
+    const sexo = (rnd() < 0.5) ? 'Femenino' : ((rnd() < 0.972) ? 'Masculino' : 'Otro');
+
+    /* --- Actividad física --- */
+    let af = Math.round((235 + 165 * zAf + 60 * g()) / 5) * 5;
+    af = clamp(af, 0, 900);
+    if (af < 30) af = Math.round(rnd() * 3) * 5;
+    const af_dias = clamp(Math.round(af / 115 + 0.85 * g()), 0, 7);
+    const scInt = af / 300 + 0.55 * g();
+    const af_int = scInt < 0.62 ? 'Ligera' : (scInt < 1.35 ? 'Moderada' : 'Intensa');
+
+    /* --- Contexto y hábitos --- */
+    const pantalla = clamp(Math.round((55 + 32 * zPant) / 5) * 5, 0, 180);
+    const estresBase = 4.4 + 1.5 * zEst + (ocupacion === 'Estudiante y trabajador' ? 0.9 : 0) + (ocupacion === 'Trabajador' ? 0.3 : 0);
+    const estres = clamp(Math.round(estresBase + 0.8 * g()), 0, 10);
+    const cafeina = clamp(Math.round(0.30 * estres + (ocupacion === 'Otro' ? 0 : 0.4) + 0.9 * g()), 0, 6);
+
+    /* --- Sueño --- */
+    let hs = 6.7 + 0.0024 * af - 0.0032 * pantalla - 0.06 * cafeina - 0.12 * (estres - 4.5) + 0.85 * zSue;
+    hs = clamp(Math.round(hs * 10) / 10, 4, 9.5);
+    const latencia = clamp(Math.round(20 + 0.9 * (estres - 4.5) + 1.1 * cafeina - 0.008 * af + 7 * g()), 0, 150);
+    const lam = Math.max(0.15, 1.6 - 0.0022 * af + 0.025 * (edad - 30) + 0.05 * (estres - 4.5));
+    const despertares = clamp(poisson(lam, rnd), 0, 6);
+
+    /* --- Percepción de sueño (ordinales) --- */
+    const s = -0.45 * ((af - 235) / 176) + 0.5 * ((pantalla - 55) / 32) + 0.85 * ((6.75 - hs) / 0.95) + 0.6 * g();
+    const somnolencia = s < -0.45 ? 'Nunca' : (s < 0.35 ? 'Leve' : (s < 1.15 ? 'Moderada' : 'Intensa'));
+    const q = 0.4 * ((af - 235) / 176) - 0.45 * ((pantalla - 55) / 32) - 0.4 * ((estres - 4.5) / 1.7)
+            + 0.55 * ((hs - 6.75) / 0.95) - 0.3 * ((cafeina - 1.5) / 1.15) + 0.85 * g();
+    const calidad = q < -1.3 ? 'Mala' : (q < -0.1 ? 'Regular' : (q < 1.1 ? 'Buena' : 'Muy buena'));
+
+    const fila = {
+      id: i + 1,
+      origen: 'sintético',
+      edad: edad, sexo: sexo, ocupacion: ocupacion,
+      af_min: af, af_dias: af_dias, af_int: af_int,
+      horas_sueno: hs, latencia: latencia, despertares: despertares,
+      calidad: calidad, somnolencia: somnolencia,
+      cafeina: cafeina, pantalla: pantalla, estres: estres
+    };
+
+    /* --- Datos finticticios faltantes (simulación de no respuesta) --- */
+    const faltantes = { latencia: 0.05, despertares: 0.04, cafeina: 0.04, pantalla: 0.05, estres: 0.04, horas_sueno: 0.03 };
+    Object.keys(faltantes).forEach(k => { if (rnd() < faltantes[k]) fila[k] = null; });
+
+    filas.push(fila);
+  }
+  return filas;
+}
+
+/* ============================================================
+   Estadística descriptiva
+   ============================================================ */
+function media(a) {
+  if (!a.length) return null;
+  return a.reduce((s, x) => s + x, 0) / a.length;
+}
+function varianza(a) {
+  const n = a.length;
+  if (n < 2) return null;
+  const m = media(a);
+  let s = 0;
+  for (let i = 0; i < n; i++) s += (a[i] - m) * (a[i] - m);
+  return s / (n - 1);            /* varianza muestral */
+}
+function desviacion(a) {
+  const v = varianza(a);
+  return v === null ? null : Math.sqrt(v);
+}
+function cuantil(s, p) {          /* s ordenado; método lineal (R tipo 7) */
+  const n = s.length;
+  if (!n) return null;
+  if (n === 1) return s[0];
+  const pos = (n - 1) * p;
+  const b = Math.floor(pos);
+  const frac = pos - b;
+  return (s[b + 1] !== undefined) ? (s[b] + frac * (s[b + 1] - s[b])) : s[b];
+}
+function modas(a) {
+  if (!a.length) return { valores: [], frec: 0, unica: true };
+  const c = {};
+  a.forEach(x => { const k = String(x); c[k] = (c[k] || 0) + 1; });
+  const max = Math.max.apply(null, Object.values(c));
+  const claves = Object.keys(c).filter(k => c[k] === max);
+  const todosUnicos = max <= 1;
+  const valores = todosUnicos ? [] : claves.map(k => (k !== '' && !isNaN(Number(k)) ? Number(k) : k));
+  return { valores: valores, frec: max, unica: todosUnicos };
+}
+function resumen(vals) {
+  const n = vals.length;
+  if (!n) return { n: 0 };
+  const s = vals.slice().sort((x, y) => x - y);
+  const m = media(vals);
+  const v = varianza(vals);
+  const sd = (v === null) ? null : Math.sqrt(v);
+  const q1 = cuantil(s, 0.25), q3 = cuantil(s, 0.75);
+  return {
+    n: n, min: s[0], max: s[n - 1],
+    media: m, mediana: cuantil(s, 0.5), modas: modas(vals),
+    varianza: v, desv: sd,
+    cv: (sd !== null && m !== 0) ? (sd / Math.abs(m)) * 100 : null,
+    rango: s[n - 1] - s[0], q1: q1, q3: q3, iqr: q3 - q1,
+    p10: cuantil(s, 0.10), p25: q1, p50: cuantil(s, 0.50), p75: q3, p90: cuantil(s, 0.90),
+    ordenado: s
+  };
+}
+
+/* ============================================================
+   Distribuciones de frecuencia
+   ============================================================ */
+function numeroBonito(x) {
+  if (!(x > 0)) return 1;
+  const e = Math.pow(10, Math.floor(Math.log10(x)));
+  const f = x / e;
+  let m;
+  if (f <= 1) m = 1; else if (f <= 2) m = 2; else if (f <= 2.5) m = 2.5; else if (f <= 5) m = 5; else m = 10;
+  return m * e;
+}
+function construirIntervalos(vals) {
+  const n = vals.length;
+  if (!n) return null;
+  const min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+  if (min === max) {
+    return { unico: true, valor: min, n: n, k: 1, ancho: 0,
+      intervalos: [{ li: min, ls: min, marca: min, fa: n, faAcum: n, fr: 100, frAcum: 100 }] };
+  }
+  let k = Math.max(1, Math.ceil(1 + 3.322 * Math.log10(n)));      /* Sturges */
+  const ancho = numeroBonito((max - min) / k);
+  let inicio = Math.floor(min / ancho) * ancho;
+  inicio = Number(inicio.toFixed(6));
+  while (inicio + ancho * k < max - 1e-9) k++;
+  const intervalos = [];
+  for (let i = 0; i < k; i++) {
+    const li = Number((inicio + i * ancho).toFixed(6));
+    const ls = Number((li + ancho).toFixed(6));
+    intervalos.push({ li: li, ls: ls, marca: (li + ls) / 2, fa: 0 });
+  }
+  vals.forEach(x => {
+    let i = Math.floor((x - inicio) / ancho);
+    if (i < 0) i = 0;
+    if (i >= k) i = k - 1;
+    intervalos[i].fa++;
+  });
+  let acum = 0;
+  intervalos.forEach(iv => {
+    acum += iv.fa;
+    iv.faAcum = acum;
+    iv.fr = iv.fa / n * 100;
+    iv.frAcum = acum / n * 100;
+  });
+  return { unico: false, min: min, max: max, k: k, ancho: ancho, inicio: inicio, n: n, intervalos: intervalos };
+}
+function valoresValidos(filas, id) {
+  return filas.map(d => d[id]).filter(x => esNumero(x));
+}
+function frecuenciasCategorica(id, filas) {
+  const v = MAP[id];
+  const niveles = v.niveles.slice();
+  const cuenta = {};
+  niveles.forEach(n => { cuenta[n] = 0; });
+  let faltantes = 0, total = 0;
+  filas.forEach(d => {
+    const x = d[id];
+    if (x === null || x === undefined || x === '') { faltantes++; return; }
+    total++;
+    if (!(x in cuenta)) { cuenta[x] = 0; niveles.push(x); }
+    cuenta[x]++;
+  });
+  let acum = 0;
+  const filasTabla = niveles.map(n => {
+    const fa = cuenta[n];
+    acum += fa;
+    return { nivel: n, fa: fa, fr: total ? fa / total * 100 : 0, faAcum: acum, frAcum: total ? acum / total * 100 : 0 };
+  });
+  return { filas: filasTabla, total: total, faltantes: faltantes, v: v, conCasos: filasTabla.filter(f => f.fa > 0).length };
+}
+function frecuenciasAgrupadas(id, filas) {
+  const vals = valoresValidos(filas, id);
+  const faltantes = filas.length - vals.length;
+  const grupo = construirIntervalos(vals);
+  return { grupo: grupo, faltantes: faltantes, total: vals.length, v: MAP[id] };
+}
+
+/* ============================================================
+   Funciones especiales: gamma y beta incompletas
+   (para el valor p del chi-cuadrado y de la t de Student)
+   ============================================================ */
+function gammaln(x) {
+  const cof = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  let y = x;
+  let tmp = x + 5.5;
+  tmp -= (x + 0.5) * Math.log(tmp);
+  let ser = 1.000000000190015;
+  for (let j = 0; j < 6; j++) ser += cof[j] / ++y;
+  return -tmp + Math.log(2.5066282746310005 * ser / x);
+}
+function gser(a, x) {
+  let ap = a, del = 1 / a, sum = 1 / a;
+  for (let n = 1; n < 400; n++) {
+    ap++; del *= x / ap; sum += del;
+    if (Math.abs(del) < Math.abs(sum) * 1e-14) break;
+  }
+  return sum * Math.exp(-x + a * Math.log(x) - gammaln(a));
+}
+function gcf(a, x) {
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 400; i++) {
+    const an = -i * (i - a);
+    b += 2;
+    d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300;
+    d = 1 / d;
+    const del = d * c;
+    h *= del;
+    if (Math.abs(del - 1) < 1e-14) break;
+  }
+  return Math.exp(-x + a * Math.log(x) - gammaln(a)) * h;
+}
+function gammaQ(a, x) {           /* cola superior Q(a,x) */
+  if (!(x > 0) || !(a > 0)) return null;
+  return (x < a + 1) ? (1 - gser(a, x)) : gcf(a, x);
+}
+function betacf(a, b, x) {
+  const MAXIT = 250, EPS = 3e-14, FPMIN = 1e-300;
+  const qab = a + b, qap = a + 1, qam = a - 1;
+  let c = 1, d = 1 - qab * x / qap;
+  if (Math.abs(d) < FPMIN) d = FPMIN;
+  d = 1 / d;
+  let h = d;
+  for (let m = 1; m <= MAXIT; m++) {
+    const m2 = 2 * m;
+    let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    const del = d * c;
+    h *= del;
+    if (Math.abs(del - 1) < EPS) break;
+  }
+  return h;
+}
+function betai(a, b, x) {
+  if (!(x > 0)) return 0;
+  if (x >= 1) return 1;
+  const bt = Math.exp(gammaln(a + b) - gammaln(a) - gammaln(b) + a * Math.log(x) + b * Math.log(1 - x));
+  return (x < (a + 1) / (a + b + 2)) ? bt * betacf(a, b, x) / a : 1 - bt * betacf(b, a, 1 - x) / b;
+}
+
+/* ============================================================
+   Tabla de contingencia y chi-cuadrado de independencia
+   ============================================================ */
+function tablaContingencia(idF, idC, filas) {
+  const vf = MAP[idF], vc = MAP[idC];
+  const fNiv = vf.niveles.slice(), cNiv = vc.niveles.slice();
+  const obs = fNiv.map(() => cNiv.map(() => 0));
+  let descartados = 0;
+  filas.forEach(d => {
+    const a = d[idF], b = d[idC];
+    if (a === null || a === undefined || a === '' || b === null || b === undefined || b === '') { descartados++; return; }
+    let i = fNiv.indexOf(a), j = cNiv.indexOf(b);
+    if (i < 0) { fNiv.push(a); i = fNiv.length - 1; obs.push(cNiv.map(() => 0)); }
+    if (j < 0) { cNiv.push(b); j = cNiv.length - 1; obs.forEach(r => r.push(0)); }
+    obs[i][j]++;
+  });
+  const rt = obs.map(r => r.reduce((s, x) => s + x, 0));
+  const ct = cNiv.map((_, j) => obs.reduce((s, r) => s + r[j], 0));
+  const iOk = fNiv.map((_, i) => i).filter(i => rt[i] > 0);
+  const jOk = cNiv.map((_, j) => j).filter(j => ct[j] > 0);
+  const exclF = fNiv.filter((_, i) => rt[i] === 0);
+  const exclC = cNiv.filter((_, j) => ct[j] === 0);
+  const obs2 = iOk.map(i => jOk.map(j => obs[i][j]));
+  const n = obs2.reduce((s, r) => s + r.reduce((a, b) => a + b, 0), 0);
+  return { filas: iOk.map(i => fNiv[i]), cols: jOk.map(j => cNiv[j]), obs: obs2, n: n,
+           descartados: descartados, exclF: exclF, exclC: exclC };
+}
+function chiCuadrado(tab) {
+  const filas = tab.filas, cols = tab.cols, obs = tab.obs;
+  const r = filas.length, c = cols.length, n = tab.n;
+  if (r < 2 || c < 2) return { error: 'Se necesitan al menos dos filas y dos columnas con casos para armar la tabla de contingencia.' };
+  if (!n) return { error: 'No hay casos válidos para la prueba.' };
+  const rt = obs.map(row => row.reduce((s, x) => s + x, 0));
+  const ct = cols.map((_, j) => obs.reduce((s, row) => s + row[j], 0));
+  const esp = obs.map((row, i) => row.map((_, j) => rt[i] * ct[j] / n));
+  let X2 = 0;
+  const contrib = [];
+  for (let i = 0; i < r; i++) {
+    for (let j = 0; j < c; j++) {
+      const E = esp[i][j], O = obs[i][j];
+      const c2 = E > 0 ? Math.pow(O - E, 2) / E : 0;
+      X2 += c2;
+      contrib.push({ f: filas[i], c: cols[j], O: O, E: E, c: c2, res: E > 0 ? (O - E) / Math.sqrt(E) : 0 });
+    }
+  }
+  const gl = (r - 1) * (c - 1);
+  const p = gammaQ(gl / 2, X2 / 2);
+  const planas = esp.flat();
+  const minE = Math.min.apply(null, planas);
+  const nMenor5 = planas.filter(e => e < 5).length;
+  const nMenor1 = planas.filter(e => e < 1).length;
+  const pctMenor5 = nMenor5 / planas.length * 100;
+  const cumple = (nMenor1 === 0 && pctMenor5 <= 20);
+  contrib.sort((a, b) => b.c - a.c);
+  const residuos = [];
+  for (let i = 0; i < r; i++) for (let j = 0; j < c; j++) {
+    residuos.push({ f: filas[i], c: cols[j], res: esp[i][j] > 0 ? (obs[i][j] - esp[i][j]) / Math.sqrt(esp[i][j]) : 0 });
+  }
+  residuos.sort((a, b) => Math.abs(b.res) - Math.abs(a.res));
+  return { X2: X2, gl: gl, p: p, esp: esp, obs: obs, filas: filas, cols: cols, n: n,
+           minE: minE, nMenor5: nMenor5, nMenor1: nMenor1, pctMenor5: pctMenor5,
+           cumple: cumple, contrib: contrib, residuos: residuos, r: r, c: c };
+}
+
+/* ============================================================
+   Correlación de Pearson y regresión lineal simple
+   ============================================================ */
+function paresXY(idX, idY, filas) {
+  const xs = [], ys = [];
+  let faltantes = 0;
+  filas.forEach(d => {
+    const a = d[idX], b = d[idY];
+    if (esNumero(a) && esNumero(b)) { xs.push(a); ys.push(b); }
+    else faltantes++;
+  });
+  return { xs: xs, ys: ys, faltantes: faltantes, total: filas.length };
+}
+function pearson(xs, ys) {
+  const n = xs.length;
+  if (n < 3) return { error: 'Se requieren al menos tres pares completos de datos para calcular la correlación.', n: n };
+  const mx = media(xs), my = media(ys);
+  let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = xs[i] - mx, dy = ys[i] - my;
+    sxy += dx * dy; sxx += dx * dx; syy += dy * dy;
+  }
+  if (sxx <= 0 || syy <= 0) return { error: 'Una de las variables no presenta variabilidad (desviación estándar nula): la correlación no está definida.', n: n };
+  const r = sxy / Math.sqrt(sxx * syy);
+  const gl = n - 2;
+  let t = null, p = null;
+  if (Math.abs(r) >= 1) { t = Infinity; p = 0; }
+  else {
+    t = r * Math.sqrt(gl / (1 - r * r));
+    p = betai(gl / 2, 0.5, gl / (gl + t * t));
+  }
+  return { r: r, t: t, p: p, gl: gl, n: n, r2: r * r, mx: mx, my: my, sxx: sxx };
+}
+function regresion(xs, ys) {
+  const c = pearson(xs, ys);
+  if (c.error) return c;
+  const n = xs.length, mx = c.mx, my = c.my;
+  let sxy = 0, sxx = 0;
+  for (let i = 0; i < n; i++) { sxy += (xs[i] - mx) * (ys[i] - my); sxx += (xs[i] - mx) * (xs[i] - mx); }
+  const b1 = sxy / sxx;
+  const b0 = my - b1 * mx;
+  const residuos = xs.map((x, i) => ({ x: x, y: ys[i], ye: b0 + b1 * x, res: ys[i] - (b0 + b1 * x) }));
+  const sse = residuos.reduce((s, r) => s + r.res * r.res, 0);
+  const sst = ys.reduce((s, y) => s + Math.pow(y - my, 2), 0);
+  const r2 = sst > 0 ? 1 - sse / sst : null;
+  const gl = n - 2;
+  const sEst = gl > 0 ? Math.sqrt(sse / gl) : null;
+  const seB1 = (sEst !== null && sxx > 0) ? sEst / Math.sqrt(sxx) : null;
+  const tB1 = (seB1 !== null && seB1 > 0) ? b1 / seB1 : null;
+  const pB1 = (tB1 !== null && gl > 0) ? betai(gl / 2, 0.5, gl / (gl + tB1 * tB1)) : null;
+  return { b0: b0, b1: b1, r2: r2, r: c.r, t: c.t, p: c.p, n: n, gl: gl,
+           sse: sse, sst: sst, sEst: sEst, seB1: seB1, tB1: tB1, pB1: pB1,
+           mx: mx, my: my, minX: Math.min.apply(null, xs), maxX: Math.max.apply(null, xs),
+           residuos: residuos };
+}
+function fuerzaCorr(r) {
+  const a = Math.abs(r);
+  if (a < 0.10) return 'muy débil';
+  if (a < 0.30) return 'débil';
+  if (a < 0.50) return 'moderada';
+  if (a < 0.70) return 'fuerte';
+  return 'muy fuerte';
+}
+function direccionCorr(r) { return r >= 0 ? 'positiva' : 'negativa'; }
+function sesgoDe(r_media, r_mediana) {
+  if (r_media === null || r_mediana === null) return 'indeterminado';
+  const d = r_media - r_mediana;
+  if (Math.abs(d) < 0.05 * Math.max(1, Math.abs(r_mediana))) return 'aproximadamente simétrica';
+  return d > 0 ? 'asimétrica a la derecha (cola derecha)' : 'asimétrica a la izquierda (cola izquierda)';
+}
+
+/* ============================================================
+   BLOQUE B · Interfaz, renderizado y gráficos (Canvas nativo)
+   ============================================================ */
+let datos = [];
+let seedActual = SEED_INICIAL;
+let nActual = N_INICIAL;
+let orden = { col: 'id', dir: 1 };
+let filtroTexto = '';
+let filtroVar = '';
+let filtroValor = '';
+
+const $ = id => document.getElementById(id);
+function seleccionar(id) { return $(id); }
+
+/* ---------- Helpers de construcción de HTML ---------- */
+function tablaHTML(cols, filas, pie) {
+  let h = '<div class="tabla-wrap"><table class="datos"><thead><tr>';
+  cols.forEach(c => { h += '<th class="' + (c.num ? 'num' : '') + '">' + c.t + '</th>'; });
+  h += '</tr></thead><tbody>';
+  filas.forEach(f => {
+    h += '<tr>';
+    f.forEach((c, i) => { h += '<td class="' + (cols[i] && cols[i].num ? 'num' : '') + '">' + c + '</td>'; });
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  if (pie) h += '<p class="pie-tabla">' + pie + '</p>';
+  return h;
+}
+function kpi(titulo, valor, sub) {
+  return '<div class="kpi"><span>' + titulo + '</span><b>' + valor + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</div>';
+}
+function caja(titulo, cuerpo, clase) {
+  return '<div class="interp ' + (clase || '') + '"><h4>' + titulo + '</h4>' + cuerpo + '</div>';
+}
+function aviso(texto, tipo) {
+  return '<div class="aviso ' + (tipo || '') + '">' + texto + '</div>';
+}
+function vacio(texto) { return '<div class="vacio">' + texto + '</div>'; }
+function opcionesHTML(lista, valor) {
+  return lista.map(o => '<option value="' + o.v + '"' + (o.v === valor ? ' selected' : '') + '>' + o.t + '</option>').join('');
+}
+function opcionesVars(lista, valor) {
+  return opcionesHTML(lista.map(v => ({ v: v.id, t: v.nombre + (v.cat ? '  · ' + v.escala : '  · ' + v.unidad) })), valor);
+}
+function listaValores(sel) { return Array.from(sel.options).map(o => o.value); }
+
+/* ============================================================
+   Generación y actualización global
+   ============================================================ */
+function aplicarMuestra(n, seed) {
+  nActual = clamp(Math.round(n), 40, 200);
+  seedActual = seed;
+  datos = generarMuestra(nActual, seedActual);
+  orden = { col: 'id', dir: 1 };
+  filtroTexto = ''; filtroVar = ''; filtroValor = '';
+  $('inpBuscar').value = '';
+  $('selFiltroVar').value = '';
+  actualizarTodo();
+}
+function actualizarTodo() {
+  renderChips();
+  renderTabla();
+  renderFrecuencias();
+  renderDescriptiva();
+  renderChi();
+  renderCorr();
+  renderReg();
+  renderPrediccion();
+  renderGraficos();
+  renderConclusiones();
+  renderConteoManual();
+}
+
+/* ============================================================
+   Chips de resumen (inicio y base de datos)
+   ============================================================ */
+function renderChips() {
+  const nManuales = datos.filter(d => d.origen === 'manual').length;
+  const totalCeldas = datos.length * VARS.length;
+  let faltantes = 0;
+  datos.forEach(d => VARS.forEach(v => { if (d[v.id] === null || d[v.id] === undefined) faltantes++; }));
+  $('chipsInicio').innerHTML =
+    '<span class="chip"><span class="punto"></span>' + datos.length + ' registros en la base</span>' +
+    '<span class="chip"><span class="punto"></span>' + VARS.length + ' variables (' + CATEG.length + ' cualitativas, ' + CUANT.length + ' cuantitativas)</span>' +
+    '<span class="chip verde"><span class="punto"></span>5 procedimientos estadísticos</span>' +
+    '<span class="chip amarillo"><span class="punto"></span>α = 0,05 por defecto</span>' +
+    '<span class="chip gris"><span class="punto"></span>Datos sintéticos con fines educativos</span>';
+  $('chipsDatos').innerHTML =
+    '<span class="chip"><span class="punto"></span>' + datos.length + ' registros</span>' +
+    '<span class="chip verde"><span class="punto"></span>' + (nManuales ? nManuales + ' agregado(s) manualmente' : 'muestra 100 % sintética') + '</span>' +
+    '<span class="chip gris"><span class="punto"></span>' + faltantes + ' valores faltantes de ' + totalCeldas + ' celdas (' + pct(totalCeldas ? faltantes / totalCeldas * 100 : 0) + ')</span>' +
+    '<span class="chip amarillo"><span class="punto"></span>semilla ' + seedActual + '</span>';
+}
+
+/* ============================================================
+   Tabla de la base de datos (orden + filtros)
+   ============================================================ */
+function datosFiltrados() {
+  let arr = datos.slice();
+  if (filtroVar && filtroValor) arr = arr.filter(d => String(d[filtroVar]) === filtroValor);
+  if (filtroTexto) {
+    const q = filtroTexto.toLowerCase();
+    arr = arr.filter(d => Object.keys(d).some(k => {
+      if (k === 'origen') return false;
+      const v = d[k];
+      return v !== null && v !== undefined && String(v).toLowerCase().indexOf(q) >= 0;
+    }));
+  }
+  return arr;
+}
+function renderTabla() {
+  const cols = [{ k: 'id', t: 'Nº', num: true }, { k: 'origen', t: 'Origen' }]
+    .concat(VARS.map(v => ({ k: v.id, t: v.nombre, num: !v.cat })));
+  const arr = datosFiltrados();
+  arr.sort((a, b) => {
+    const ca = a[orden.col], cb = b[orden.col];
+    if (ca === null || ca === undefined) return 1;
+    if (cb === null || cb === undefined) return -1;
+    let c;
+    if (typeof ca === 'number' && typeof cb === 'number') c = ca - cb;
+    else c = String(ca).localeCompare(String(cb), 'es');
+    return c * orden.dir;
+  });
+  let h = '<thead><tr>';
+  cols.forEach(c => {
+    const activo = orden.col === c.k;
+    h += '<th data-col="' + c.k + '" class="ordenable ' + (c.num ? 'num' : '') + '">' + c.t +
+         (activo ? (orden.dir > 0 ? ' ▲' : ' ▼') : '') + '</th>';
+  });
+  h += '</tr></thead><tbody>';
+  arr.forEach(d => {
+    h += '<tr>';
+    h += '<td class="num">' + d.id + '</td>';
+    h += '<td>' + escapeHTML(String(d.origen)) + (d.origen === 'manual' ? '<span class="marca-manual">manual</span>' : '') + '</td>';
+    VARS.forEach(v => {
+      const x = d[v.id];
+      if (x === null || x === undefined || x === '') { h += '<td class="' + (v.cat ? '' : 'num') + '"><span class="falta">—</span></td>'; }
+      else if (v.cat) h += '<td>' + escapeHTML(String(x)) + '</td>';
+      else h += '<td class="num">' + fmt(x, v.dec) + '</td>';
+    });
+    h += '</tr>';
+  });
+  if (!arr.length) h += '<tr><td colspan="' + cols.length + '" style="text-align:center;padding:22px;color:#64748B">Ningún registro coincide con los filtros aplicados.</td></tr>';
+  h += '</tbody>';
+  $('tablaDatos').innerHTML = h;
+  $('conteoFiltrado').textContent = 'Mostrando ' + arr.length + ' de ' + datos.length + ' registros';
+  Array.from($('tablaDatos').querySelectorAll('th.ordenable')).forEach(th => {
+    th.addEventListener('click', () => {
+      const k = th.getAttribute('data-col');
+      if (orden.col === k) orden.dir *= -1; else { orden.col = k; orden.dir = 1; }
+      renderTabla();
+    });
+  });
+}
+
+/* ============================================================
+   Cuestionario
+   ============================================================ */
+function construirFormulario() {
+  $('camposForm').innerHTML = VARS.map(v => {
+    const id = 'q_' + v.id;
+    let control;
+    if (v.cat) {
+      control = '<select id="' + id + '"><option value="">— Seleccionar —</option>' +
+        v.niveles.map(n => '<option>' + n + '</option>').join('') + '</select>';
+    } else {
+      control = '<input type="number" id="' + id + '" min="' + v.min + '" max="' + v.max + '" step="' + v.step +
+        '" placeholder="' + v.min + ' – ' + v.max + '">';
+    }
+    return '<div class="campo"><label for="' + id + '">' + v.nombre +
+      (v.req ? ' <span class="req" title="obligatorio">*</span>' : '') + '</label>' + control +
+      '<div class="hint"><strong>' + v.pregunta + '</strong><br>Tipo: ' + v.tipo + ' · Escala: ' + v.escala +
+      ' · Codificación: ' + codificacion(v) + '</div></div>';
+  }).join('');
+}
+function renderConteoManual() {
+  const n = datos.filter(d => d.origen === 'manual').length;
+  $('conteoManual').textContent = n ? (n + ' registro(s) manual(es) en la base') : 'Todavía no has agregado registros';
+}
+function mostrarMensaje(el, texto, tipo) {
+  el.className = 'mensaje ' + tipo;
+  el.innerHTML = texto;
+}
+function siguienteId() {
+  return datos.reduce((m, d) => Math.max(m, d.id), 0) + 1;
+}
+function agregarRegistro(ev) {
+  ev.preventDefault();
+  const fila = { id: siguienteId(), origen: 'manual' };
+  const errores = [], faltantesReq = [];
+  VARS.forEach(v => {
+    const el = $('q_' + v.id);
+    if (v.cat) {
+      const val = el.value;
+      fila[v.id] = val ? val : null;
+      if (v.req && !val) faltantesReq.push(v.nombre);
+    } else {
+      const raw = (el.value || '').trim();
+      if (raw === '') { fila[v.id] = null; if (v.req) faltantesReq.push(v.nombre); }
+      else {
+        const num = Number(raw);
+        if (Number.isNaN(num)) errores.push(v.nombre + ': el valor «' + raw + '» no es numérico.');
+        else if (num < v.min || num > v.max) errores.push(v.nombre + ': ' + num + ' está fuera del rango permitido (' + v.min + '–' + v.max + ').');
+        else fila[v.id] = num;
+      }
+    }
+  });
+  if (faltantesReq.length || errores.length) {
+    let t = '<strong>No se pudo agregar el registro.</strong>';
+    if (faltantesReq.length) t += '<br>Faltan campos obligatorios: ' + faltantesReq.join(', ') + '.';
+    if (errores.length) t += '<br>' + errores.join('<br>');
+    mostrarMensaje($('msgForm'), t, 'err');
+    return;
+  }
+  datos.push(fila);
+  actualizarTodo();
+  mostrarMensaje($('msgForm'), '<strong>Registro #' + fila.id + ' agregado correctamente.</strong> Se marcó como «manual» y todos los resultados se actualizaron.', 'ok');
+  $('formCuestionario').reset();
+}
+function exportarCSV() {
+  const cabecera = ['registro', 'origen'].concat(VARS.map(v => v.id));
+  const lineas = [cabecera.join(',')];
+  datos.forEach((d, i) => {
+    const fila = [i + 1, d.origen || 'sintetico'].concat(VARS.map(v => {
+      const x = d[v.id];
+      if (x === null || x === undefined) return '';
+      return String(x);
+    }));
+    lineas.push(fila.join(','));
+  });
+  const blob = new Blob(['\ufeff' + lineas.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'base_actividad_fisica_sueno_sintetica.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+/* ============================================================
+   Distribuciones de frecuencia
+   ============================================================ */
+function barraHTML(fr) {
+  return '<span class="barra-progreso"><i style="width:' + clamp(fr, 0, 100).toFixed(1) + '%"></i></span>';
+}
+function renderFrecuencias() {
+  const id = $('selFrecVar').value;
+  const v = MAP[id];
+  const cont = $('frecResultado');
+  if (!v) { cont.innerHTML = vacio('Selecciona una variable.'); return; }
+
+  if (v.cat) {
+    $('tipoFrec').textContent = 'Cualitativa · ' + v.escala;
+    const f = frecuenciasCategorica(id, datos);
+    if (!f.total) { cont.innerHTML = vacio('No hay valores válidos para esta variable.'); return; }
+    const cols = [{ t: 'Categoría' }, { t: 'fa', num: true }, { t: 'fr (%)', num: true },
+                  { t: 'fa acumulada', num: true }, { t: 'fra (%)', num: true }, { t: 'Proporción' }];
+    const filas = f.filas.map(r => [
+      escapeHTML(r.nivel), fmtEnt(r.fa), fmt(r.fr, 1), fmtEnt(r.faAcum), fmt(r.frAcum, 1), barraHTML(r.fr)
+    ]);
+    filas.push(['Total', fmtEnt(f.total), fmt(100, 1), fmtEnt(f.total), fmt(100, 1), '']);
+    let h = '<div class="aviso info"><strong>Variable:</strong> ' + v.nombre + ' · <strong>tipo:</strong> ' +
+      v.tipo + ' (' + v.escala + ') · <strong>codificación:</strong> ' + codificacion(v) +
+      ' · <strong>casos válidos:</strong> ' + f.total + ' · <strong>valores faltantes:</strong> ' + f.faltantes + '</div>';
+    h += tablaHTML(cols, filas, 'fa = frecuencia absoluta; fr = frecuencia relativa (%); fa acumulada y fra (%) = acumulados sobre el total de casos válidos.');
+    h += caja('¿Cómo se interpreta?', interpFrecCat(f, v));
+    cont.innerHTML = h;
+  } else {
+    $('tipoFrec').textContent = 'Cuantitativa agrupada · Sturges';
+    const g = frecuenciasAgrupadas(id, datos);
+    if (!g.grupo) { cont.innerHTML = vacio('No hay valores numéricos válidos para esta variable.'); return; }
+    const dec = decimalesDe(v);
+    const cols = [{ t: 'Intervalo [LI, LS)' }, { t: 'Marca de clase', num: true }, { t: 'fa', num: true },
+                  { t: 'fr (%)', num: true }, { t: 'fa acumulada', num: true }, { t: 'fra (%)', num: true }, { t: 'Distribución' }];
+    const filas = g.grupo.intervalos.map(iv => [
+      g.grupo.unico ? fmt(iv.li, dec) + ' (valor único)' : '[' + fmt(iv.li, dec) + ' , ' + fmt(iv.ls, dec) + ')',
+      fmt(iv.marca, dec), fmtEnt(iv.fa), fmt(iv.fr, 1), fmtEnt(iv.faAcum), fmt(iv.frAcum, 1), barraHTML(iv.fr)
+    ]);
+    filas.push(['Total', '—', fmtEnt(g.total), fmt(100, 1), fmtEnt(g.total), fmt(100, 1), '']);
+    let h = '<div class="aviso info"><strong>Variable:</strong> ' + v.nombre + ' · <strong>unidad:</strong> ' + v.unidad +
+      ' · <strong>casos válidos:</strong> ' + g.total + ' · <strong>faltantes:</strong> ' + g.faltantes +
+      (g.grupo.unico ? '' : ' · <strong>intervalos:</strong> ' + g.grupo.k + ' · <strong>amplitud:</strong> ' + fmt(g.grupo.ancho, dec) + ' ' + v.unidad) + '</div>';
+    h += tablaHTML(cols, filas, 'Marca de clase = (LI + LS) / 2. Los intervalos son de tipo [LI, LS): el límite superior no se incluye, salvo en el último intervalo.');
+    h += caja('¿Cómo se interpreta?', interpFrecCuan(g, v));
+    cont.innerHTML = h;
+  }
+}
+function interpFrecCat(f, v) {
+  const con = f.filas.filter(x => x.fa > 0);
+  if (!con.length) return '<p>No hay casos válidos.</p>';
+  const top = con.slice().sort((a, b) => b.fa - a.fa)[0];
+  const bottom = con.slice().sort((a, b) => a.fa - b.fa)[0];
+  const empatadas = con.filter(x => x.fa === top.fa).map(x => x.nivel);
+  const modaTxt = empatadas.length > 1 ? 'hay empate entre ' + empatadas.map(x => '«' + x + '»').join(' y ') : '«' + top.nivel + '»';
+  const acumMedio = con.filter(x => x.frAcum <= 50).slice(-1)[0];
+  const ordinal = v.escala === 'Ordinal';
+  let acumTxt = '';
+  if (ordinal && acumMedio) {
+    acumTxt = 'Siguiendo el orden de las categorías, el ' + pct(acumMedio.frAcum) +
+      ' de los casos válidos se ubica en «' + acumMedio.nivel + '» o en un nivel inferior.';
+  }
+  return '<ul>' +
+    '<li><b>Qué mide:</b> la tabla de frecuencias describe cómo se distribuyen los ' + f.total +
+    ' casos válidos de <strong>' + v.nombre + '</strong> entre sus categorías: cuántos casos hay en cada una (fa), qué proporción representan (fr) y cuántos se acumulan al llegar a cada nivel.</li>' +
+    '<li><b>Cómo se lee su valor:</b> la categoría más frecuente es ' + modaTxt + ' con fa = ' + fmtEnt(top.fa) +
+    ' (' + pct(top.fr) + '); la menos frecuente es «' + bottom.nivel + '» con fa = ' + fmtEnt(bottom.fa) + ' (' + pct(bottom.fr) + ').' +
+    (acumTxt ? ' ' + acumTxt : '') + '</li>' +
+    '<li><b>Qué aporta al tema:</b> permite saber qué tan extendida está cada conducta o percepción en la muestra (por ejemplo, cuántas personas refieren calidad de sueño «Mala» o practican actividad de intensidad «Intensa»), que es el punto de partida para después comparar grupos.</li>' +
+    '<li><b>Conclusiones justificadas:</b> en esta muestra, la percepción predominante corresponde a «' + top.nivel + '».' +
+    (con.length < f.filas.length ? ' Las categorías sin casos se muestran con fa = 0 y no aportan al cálculo.' : '') + '</li>' +
+    '<li><b>Limitaciones:</b> las frecuencias describen únicamente a los participantes incluidos: al ser una muestra no probabilística con datos sintéticos, <strong>no se pueden generalizar</strong> a una población. Además, una tabla de frecuencias no informa sobre relaciones entre variables; para eso se usan las pruebas de la sección «Pruebas estadísticas».</li>' +
+    '</ul>';
+}
+function interpFrecCuan(g, v) {
+  const gr = g.grupo;
+  const vals = valoresValidos(datos, v.id);
+  const r = resumen(vals);
+  let modal = null;
+  gr.intervalos.forEach(iv => { if (!modal || iv.fa > modal.fa) modal = iv; });
+  let cuerpo = '<ul>' +
+    '<li><b>Qué mide:</b> la tabla agrupa los valores de <strong>' + v.nombre + '</strong> (' + v.unidad +
+    ') en ' + (gr.unico ? 'un único valor' : gr.k + ' intervalos de amplitud ' + fmt(gr.ancho, decimalesDe(v))) +
+    ', lo que permite ver la forma de la distribución en lugar de valores sueltos.</li>';
+  if (gr.unico) {
+    cuerpo += '<li><b>Cómo se lee:</b> todos los casos válidos toman el valor ' + fmt(gr.valor, decimalesDe(v)) +
+      '; no hay dispersión posible y no tiene sentido calcular intervalos.</li>';
+  } else {
+    cuerpo += '<li><b>Cómo se lee:</b> la clase modal es [' + fmt(modal.li, decimalesDe(v)) + ' , ' +
+      fmt(modal.ls, decimalesDe(v)) + ') con fa = ' + fmtEnt(modal.fa) + ' (' + pct(modal.fr) +
+      '), que concentra la mayor proporción de casos. La media (' + fmt(r.media, 2) + ') frente a la mediana (' +
+      fmt(r.mediana, 2) + ') indica una distribución <strong>' + sesgoDe(r.media, r.mediana) + '</strong>.' +
+      ' La última clase acumula el ' + pct(gr.intervalos[gr.intervalos.length - 1].frAcum) + ' de los casos, es decir, el total.</li>';
+  }
+  cuerpo += '<li><b>Qué aporta al tema:</b> muestra si la actividad física o el sueño se concentran en valores bajos, medios o altos, y si existen casos extremos que convenga revisar antes de interpretar promedios.</li>' +
+    '<li><b>Conclusiones justificadas:</b> la clase de mayor frecuencia es la indicada arriba' +
+    (gr.unico ? '' : ' ([' + fmt(modal.li, decimalesDe(v)) + ' , ' + fmt(modal.ls, decimalesDe(v)) + ') con ' + fmtEnt(modal.fa) + ' casos)') +
+    ' y, por definición, el 50 % de los casos válidos presenta un valor igual o inferior a la mediana (' +
+    fmt(r.mediana, 2) + ' ' + v.unidad + ').</li>' +
+    '<li><b>Limitaciones:</b> el número y la amplitud de los intervalos (Sturges) modifican la apariencia de la distribución; con pocos casos el histograma es sensible al azar. Los datos son sintéticos y autorreportados.</li>' +
+    '</ul>';
+  return cuerpo;
+}
+
+/* ============================================================
+   Estadística descriptiva
+   ============================================================ */
+function renderDescriptiva() {
+  const id = $('selDescVar').value;
+  const v = MAP[id];
+  const cont = $('descResultado');
+  if (!v) { cont.innerHTML = vacio('Selecciona una variable cuantitativa.'); return; }
+  $('unidadDesc').textContent = v.unidad;
+  const vals = valoresValidos(datos, id);
+  if (vals.length < 2) {
+    cont.innerHTML = vacio('Se necesitan al menos 2 valores válidos; la base tiene ' + vals.length + '.');
+    return;
+  }
+  const r = resumen(vals);
+  const dec = decimalesDe(v);
+  const faltantes = datos.length - vals.length;
+  const esDiscreta = v.escala.indexOf('discreta') >= 0;
+
+  let kpis = '';
+  kpis += kpi('N válido', fmtEnt(r.n), 'de ' + datos.length + ' registros');
+  kpis += kpi('Valores faltantes', fmtEnt(faltantes), faltantes ? 'excluidos del cálculo' : 'sin faltantes');
+  kpis += kpi('Media (x̄)', fmt(r.media, 2), v.unidad);
+  kpis += kpi('Mediana (Me)', fmt(r.mediana, 2), v.unidad);
+  const modoTxt = r.modas.unica ? 'Sin moda' : r.modas.valores.map(x => fmt(x, dec)).join(' / ');
+  kpis += kpi('Moda', modoTxt, r.modas.unica ? 'todos los valores son únicos' : 'frecuencia ' + fmtEnt(r.modas.frec));
+  kpis += kpi('Mínimo', fmt(r.min, dec), v.unidad);
+  kpis += kpi('Máximo', fmt(r.max, dec), v.unidad);
+  kpis += kpi('Rango', fmt(r.rango, dec), 'máx − mín');
+  kpis += kpi('Varianza (S²)', fmt(r.varianza, 2), 'muestral, n − 1');
+  kpis += kpi('Desviación estándar (S)', fmt(r.desv, 2), v.unidad);
+  kpis += kpi('Coef. de variación', r.cv === null ? '—' : pct(r.cv, 1), 'S / x̄ × 100', true);
+  kpis += kpi('Rango intercuartílico', fmt(r.iqr, 2), 'Q3 − Q1');
+
+  const colsPer = [
+    { t: 'Estadístico de posición', num: false }, { t: 'Valor', num: true }, { t: 'Interpretación', num: false }
+  ];
+  const filasPer = [
+    ['Percentil 10 (p10)', fmt(r.p10, 2), 'El 10 % de los casos está por debajo de este valor'],
+    ['Percentil 25 (p25) = Q1', fmt(r.q1, 2), 'Límite inferior del 50 % central'],
+    ['Percentil 50 (p50) = Mediana', fmt(r.mediana, 2), 'Divide la muestra en dos mitades iguales'],
+    ['Percentil 75 (p75) = Q3', fmt(r.q3, 2), 'Límite superior del 50 % central'],
+    ['Percentil 90 (p90)', fmt(r.p90, 2), 'El 10 % superior supera este valor']
+  ];
+
+  let h = '<div class="kpis">' + kpis + '</div>';
+  h += tablaHTML(colsPer, filasPer, 'Los cuartiles y percentiles se calculan por interpolación lineal sobre los ' + r.n + ' valores ordenados.');
+  h += '<div class="aviso info"><strong>Lectura rápida:</strong> la media es ' + fmt(r.media, 2) + ' ' + v.unidad +
+    ' y la mediana ' + fmt(r.mediana, 2) + ' ' + v.unidad + '; la desviación estándar de ' + fmt(r.desv, 2) +
+    ' indica una dispersión ' + (r.desv / (Math.abs(r.media) || 1) > 0.5 ? 'alta' : (r.desv / (Math.abs(r.media) || 1) > 0.25 ? 'moderada' : 'baja')) +
+    ' relativa a la media. El 50 % central de los participantes se ubica entre ' + fmt(r.q1, 2) + ' y ' + fmt(r.q3, 2) + ' ' + v.unidad + '.</div>';
+  h += caja('¿Cómo se interpreta?', interpDesc(r, v, faltantes, esDiscreta));
+  cont.innerHTML = h;
+}
+function interpDesc(r, v, faltantes, esDiscreta) {
+  const sesgo = sesgoDe(r.media, r.mediana);
+  const relCv = r.cv === null ? 'no calculable porque la media es cero' :
+    (r.cv < 15 ? 'baja (los valores se agrupan cerca de la media)' : (r.cv < 30 ? 'moderada' : 'alta (valores muy dispersos)'));
+  return '<ul>' +
+    '<li><b>Qué miden:</b> la <strong>media</strong> es el valor promedio alrededor del cual se concentran los datos; la <strong>mediana</strong> es el valor que deja el 50 % de los casos por debajo; la <strong>moda</strong> es el valor más repetido. La <strong>varianza</strong> y la <strong>desviación estándar</strong> miden cuánto se alejan los valores de la media, y los <strong>cuartiles y percentiles</strong> indican dónde se ubican los valores de cada posición relativa.</li>' +
+    '<li><b>Cómo se leen sus valores:</b> la media es ' + fmt(r.media, 2) + ' y la mediana ' + fmt(r.mediana, 2) +
+    ' ' + v.unidad + ': al estar la media ' + (r.media > r.mediana ? 'por encima' : 'por debajo') +
+    ' de la mediana, la distribución es <strong>' + sesgo + '</strong>. La desviación estándar de ' + fmt(r.desv, 2) +
+    ' significa que, en promedio, un valor típico se distancia de la media en esa cantidad de ' + v.unidad +
+    '; el coeficiente de variación (' + (r.cv === null ? '—' : pct(r.cv)) + ') es ' + relCv +
+    '. El 50 % central oscila entre ' + fmt(r.q1, 2) + ' y ' + fmt(r.q3, 2) + ' (RIC = ' + fmt(r.iqr, 2) +
+    '), y el rango total es ' + fmt(r.rango, 2) + ' (de ' + fmt(r.min, 2) + ' a ' + fmt(r.max, 2) + ').</li>' +
+    '<li><b>Qué aporta al tema:</b> resume en pocos números el perfil de <strong>' + v.nombre +
+    '</strong> en la muestra: cuánto duermen o cuánta actividad física hacen en promedio, cuánto varía ese comportamiento entre personas y qué valores son poco frecuentes.</li>' +
+    '<li><b>Conclusiones justificadas:</b> se puede afirmar que al menos el 50 % de los participantes tiene valores iguales o menores que la mediana (' + fmt(r.mediana, 2) +
+    '), que el valor más alto observado es ' + fmt(r.max, 2) + ' y el más bajo ' + fmt(r.min, 2) +
+    '. Con una dispersión ' + relCv + ', el promedio es ' + (r.cv !== null && r.cv > 30 ? 'una descripción poco representativa del caso típico, por lo que conviene apoyarse en la mediana' : 'una descripción razonable del caso típico') + '.</li>' +
+    '<li><b>Limitaciones:</b> ' + (esDiscreta ? 'al ser una variable discreta, la media puede tomar valores que no existen en los datos; ' : '') +
+    'la media se ve afectada por valores extremos, por lo que conviene compararla siempre con la mediana. Hay ' + faltantes +
+    ' valor(es) faltante(s) excluidos del cálculo. Con datos sintéticos y muestra no probabilística, estos valores describen solo a los participantes incluidos y no permiten inferencias poblacionales.</li>' +
+    '</ul>';
+}
+
+/* ============================================================
+   Chi-cuadrado de independencia
+   ============================================================ */
+function renderChi() {
+  const idF = $('selChiFila').value, idC = $('selChiCol').value;
+  const cont = $('chiResultado');
+  const alfa = Number($('selAlfa').value);
+  if (!idF || !idC) { cont.innerHTML = vacio('Selecciona dos variables cualitativas.'); return; }
+  if (idF === idC) { cont.innerHTML = aviso('Selecciona <strong>dos variables distintas</strong>: la tabla de contingencia cruza una variable contra otra.', 'warn'); return; }
+  const tab = tablaContingencia(idF, idC, datos);
+  if (tab.n === 0 || tab.filas.length < 2 || tab.cols.length < 2) {
+    cont.innerHTML = aviso('No hay suficientes casos válidos cruzados entre <strong>' + MAP[idF].nombre +
+      '</strong> y <strong>' + MAP[idC].nombre + '</strong> para armar una tabla de contingencia con al menos dos filas y dos columnas.', 'error');
+    return;
+  }
+  const res = chiCuadrado(tab);
+  if (res.error) { cont.innerHTML = aviso(res.error, 'error'); return; }
+
+  const vF = MAP[idF], vC = MAP[idC];
+  /* --- tabla observada --- */
+  const colsO = [{ t: vF.nombre + ' ↓ / ' + vC.nombre + ' →' }].concat(res.cols.map(c => ({ t: c, num: true }))).concat([{ t: 'Total', num: true }]);
+  const filasO = res.filas.map((f, i) => {
+    const t = res.obs[i].reduce((s, x) => s + x, 0);
+    return [escapeHTML(f)].concat(res.obs[i].map(x => fmtEnt(x))).concat([fmtEnt(t)]);
+  });
+  const totC = res.cols.map((_, j) => res.obs.reduce((s, r) => s + r[j], 0));
+  filasO.push(['<strong>Total</strong>'].concat(totC.map(x => '<strong>' + fmtEnt(x) + '</strong>')).concat(['<strong>' + fmtEnt(res.n) + '</strong>']));
+
+  /* --- tabla esperada --- */
+  const filasE = res.filas.map((f, i) => [escapeHTML(f)].concat(res.esp[i].map(x => fmt(x, 1))));
+
+  /* --- KPIs --- */
+  const rechaza = (res.p !== null) && (res.p < alfa);
+  let kpis = '';
+  kpis += kpi('Casos válidos', fmtEnt(res.n), 'pares sin datos faltantes');
+  kpis += kpi('Estadístico χ²', fmt(res.X2, 3), 'suma de (O − E)² / E');
+  kpis += kpi('Grados de libertad', fmtEnt(res.gl), '(' + res.r + ' − 1) × (' + res.c + ' − 1)');
+  kpis += kpi('Valor p', fmtP(res.p), 'α = ' + fmt(alfa, 2));
+  kpis += kpi('Decisión', rechaza ? 'Se rechaza H₀' : 'No se rechaza H₀',
+    rechaza ? 'p < α: hay asociación' : 'p ≥ α: no hay evidencia');
+
+  /* --- supuestos --- */
+  const pctM5 = res.pctMenor5;
+  const sup = [
+    '<b>Ninguna frecuencia esperada menor que 1:</b> ' + (res.nMenor1 === 0 ? 'se cumple (' + res.nMenor1 + ' celdas)' : '<strong>NO se cumple</strong> (' + res.nMenor1 + ' celdas)'),
+    '<b>Frecuencias esperadas ≥ 5 en al menos el 80 % de las celdas:</b> ' + (pctM5 <= 20 ? 'se cumple' : '<strong>NO se cumple</strong>') +
+      ' (' + res.nMenor5 + ' de ' + (res.r * res.c) + ' celdas con E &lt; 5 = ' + pct(pctM5) + ')',
+    '<b>Esperada mínima:</b> ' + fmt(res.minE, 2),
+    '<b>Muestras independientes:</b> cada participante aporta a una sola celda',
+    '<b>Variables cualitativas</b> con categorías mutuamente excluyentes'
+  ];
+  const supOK = res.cumple;
+
+  /* --- contribuciones --- */
+  const topC = res.contrib.slice(0, 3).map(c =>
+    '<li>' + escapeHTML(c.f) + ' × ' + escapeHTML(c.c) + ': O = ' + fmtEnt(c.O) + ', E = ' + fmt(c.E, 1) +
+    ', aporta ' + fmt(c.c, 3) + ' al χ² (' + pct(c.c / res.X2 * 100) + ' del total)</li>').join('');
+  const topR = res.residuos.slice(0, 3).map(c =>
+    '<li>' + escapeHTML(c.f) + ' × ' + escapeHTML(c.c) + ': residuo estandarizado ' + fmt(c.res, 2) +
+    (Math.abs(c.res) >= 2 ? ' (diferencia notable respecto de lo esperado)' : ' (diferencia pequeña)') + '</li>').join('');
+
+  let h = '';
+  h += '<div class="kpis">' + kpis + '</div>';
+  h += '<div class="grid g2">';
+  h += '<div><h4>Tabla de contingencia · frecuencias observadas (O)</h4>' + tablaHTML(colsO, filasO) + '</div>';
+  h += '<div><h4>Frecuencias esperadas (E) bajo H₀</h4>' +
+    tablaHTML([{ t: vF.nombre }].concat(res.cols.map(c => ({ t: c, num: true }))), filasE,
+      'E<sub>ij</sub> = (total de la fila i × total de la columna j) / total general.') + '</div>';
+  h += '</div>';
+
+  h += '<h4>Contraste de hipótesis</h4>';
+  h += '<div class="grid g2">' +
+    '<div class="tarjeta tono"><p><strong>Hipótesis nula (H₀):</strong> las variables <em>' + vF.nombre +
+    '</em> y <em>' + vC.nombre + '</em> son <strong>independientes</strong>: no existe asociación entre ellas en la población.</p>' +
+    '<p><strong>Hipótesis alternativa (H₁):</strong> las variables están <strong>asociadas</strong> (no son independientes).</p></div>' +
+    '<div class="tarjeta tono"><p><span class="formula">χ² = Σ (O − E)² / E</span></p>' +
+    '<p><strong>Estadístico:</strong> ' + fmt(res.X2, 3) + ' · <strong>gl:</strong> ' + fmtEnt(res.gl) +
+    ' · <strong>valor p:</strong> ' + fmtP(res.p) + ' · <strong>α:</strong> ' + fmt(alfa, 2) + '</p>' +
+    '<p><strong>Decisión:</strong> ' + (rechaza
+      ? 'como p &lt; α, se <strong>rechaza H₀</strong> y se concluye que hay evidencia de asociación.'
+      : 'como p ≥ α, <strong>no se rechaza H₀</strong>: no hay evidencia suficiente para afirmar asociación.') + '</p></div></div>';
+
+  h += '<h4>Revisión de supuestos</h4><div class="aviso ' + (supOK ? 'ok' : 'warn') + '"><ul class="lista-limpia">' +
+    sup.map(s => '<li>' + s + '</li>').join('') + '</ul>' +
+    (supOK ? '<strong>Se respetan las condiciones para aplicar la aproximación chi-cuadrado.</strong>'
+           : '<strong>Precaución:</strong> el incumplimiento de los supuestos puede sesgar el valor p. Como alternativa, conviene <strong>agrupar categorías poco frecuentes</strong> (por ejemplo, unir «Mala» con «Regular») o aplicar una prueba exacta como la de Fisher para tablas 2 × 2.') +
+    '</div>';
+
+  h += '<h4>Contribución de cada celda al estadístico</h4><div class="grid g2">' +
+    '<div class="tarjeta tono"><p class="sub">Celdas que más aportan al χ²:</p><ul class="lista-limpia">' + topC + '</ul></div>' +
+    '<div class="tarjeta tono"><p class="sub">Residuos estandarizados (O − E) / √E con mayor valor absoluto:</p><ul class="lista-limpia">' + topR + '</ul></div></div>';
+
+  if (tab.exclF.length || tab.exclC.length || tab.descartados) {
+    h += aviso('<strong>Notas de depuración:</strong>' +
+      (tab.exclF.length ? ' categorías de fila sin casos excluidas: ' + tab.exclF.join(', ') + '.' : '') +
+      (tab.exclC.length ? ' categorías de columna sin casos excluidas: ' + tab.exclC.join(', ') + '.' : '') +
+      (tab.descartados ? ' ' + tab.descartados + ' registro(s) con valores faltantes en alguna de las dos variables fueron excluidos.' : ''), 'info');
+  }
+
+  h += caja('¿Cómo se interpreta?', interpChi(res, vF, vC, alfa, rechaza));
+  cont.innerHTML = h;
+}
+function interpChi(res, vF, vC, alfa, rechaza) {
+  const top = res.contrib[0];
+  const resTop = res.residuos[0];
+  const supTxt = res.cumple
+    ? 'Los supuestos se respetan: la esperada mínima es ' + fmt(res.minE, 2) + ' y solo ' + res.nMenor5 + ' de ' + (res.r * res.c) + ' celdas (' + pct(res.pctMenor5) + ') están por debajo de 5.'
+    : 'Los supuestos no se respetan del todo: ' + res.nMenor5 + ' de ' + (res.r * res.c) + ' celdas (' + pct(res.pctMenor5) + ') tienen esperada menor que 5' +
+      (res.nMenor1 > 0 ? ' y ' + res.nMenor1 + ' tienen esperada menor que 1' : '') +
+      ', por lo que el valor p debe leerse con cautela.';
+  const concl = rechaza
+    ? 'Se rechaza la independencia: en esta muestra <strong>' + vF.nombre + ' y ' + vC.nombre +
+      ' se asocian</strong>, es decir, la distribución de una variable depende de los niveles de la otra.'
+    : 'No se rechaza la independencia: <strong>no hay evidencia suficiente</strong> para afirmar que ' +
+      vF.nombre + ' y ' + vC.nombre + ' estén asociadas en la población.';
+  return '<ul>' +
+    '<li><b>Qué mide el estadístico:</b> el χ² compara las frecuencias <strong>observadas</strong> con las que se <strong>esperarían</strong> si H₀ fuera cierta (independencia total). Cuanto más grandes son las diferencias O − E, mayor es el χ². Con ' + fmtEnt(res.gl) + ' grados de libertad y un valor p de ' + fmtP(res.p) + ', se compara contra α = ' + fmt(alfa, 2) + '.</li>' +
+    '<li><b>Cómo se interpreta su valor:</b> ' + concl + ' La celda que más pesa en el estadístico es <strong>' +
+    escapeHTML(top.f) + ' × ' + escapeHTML(top.c) + '</strong> (O = ' + fmtEnt(top.O) + ' frente a E = ' + fmt(top.E, 1) +
+    ', ' + pct(top.c / res.X2 * 100) + ' del χ² total), y el mayor residuo estandarizado corresponde a <strong>' +
+    escapeHTML(resTop.f) + ' × ' + escapeHTML(resTop.c) + '</strong> (' + fmt(resTop.res, 2) + '), que indica dónde se concentra la diferencia respecto de lo esperado.</li>' +
+    '<li><b>Qué aporta al tema:</b> permite responder si el <strong>nivel de ' + vF.nombre.toLowerCase() +
+    '</strong> guarda relación con <strong>' + vC.nombre.toLowerCase() + '</strong>, por ejemplo, si quienes reportan mayor intensidad de actividad también reportan distinta calidad de sueño.</li>' +
+    '<li><b>Conclusiones justificadas:</b> ' + (rechaza
+        ? 'existe asociación estadísticamente significativa entre ambas variables en la muestra (p &lt; α).'
+        : 'no se detecta asociación significativa; cualquier diferencia observada puede deberse al azar.') +
+      ' ' + supTxt + '</li>' +
+    '<li><b>Limitaciones:</b> el chi-cuadrado solo mide <strong>asociación, no causalidad</strong>, y no informa de la dirección ni del tamaño del efecto (para eso conviene reportar el coeficiente V de Cramér o los residuos). Al ser un diseño transversal con datos sintéticos y autorreportados, el resultado describe a la muestra estudiada y no permite generalizar ni afirmar que una variable cause cambios en la otra.</li>' +
+    '</ul>';
+}
+
+/* ============================================================
+   Correlación de Pearson
+   ============================================================ */
+function renderCorr() {
+  const idX = $('selCorrX').value, idY = $('selCorrY').value;
+  const cont = $('corrResultado');
+  const alfa = Number($('selAlfa').value);
+  if (!idX || !idY) { cont.innerHTML = vacio('Selecciona dos variables cuantitativas.'); return; }
+  if (idX === idY) { cont.innerHTML = aviso('Selecciona <strong>dos variables distintas</strong>: la correlación mide la relación entre una variable y otra.', 'warn'); return; }
+  const vX = MAP[idX], vY = MAP[idY];
+  $('unidCorr').textContent = 'X: ' + vX.unidad + ' · Y: ' + vY.unidad;
+  const par = paresXY(idX, idY, datos);
+  if (par.xs.length < 3) {
+    cont.innerHTML = aviso('Solo hay <strong>' + par.xs.length + '</strong> pares completos; se necesitan al menos 3 (recomendable 30 o más) para calcular la correlación.', 'error');
+    return;
+  }
+  const res = pearson(par.xs, par.ys);
+  if (res.error) { cont.innerHTML = aviso(res.error, 'error'); return; }
+  const signo = res.r >= 0 ? '+' : '−';
+  const rechaza = res.p !== null && res.p < alfa;
+
+  let kpis = '';
+  kpis += kpi('Pares completos (n)', fmtEnt(res.n), par.faltantes ? par.faltantes + ' faltantes excluidos' : 'sin faltantes');
+  kpis += kpi('Coeficiente r', fmt(res.r, 4), 'Pearson');
+  kpis += kpi('Dirección', res.r >= 0 ? 'Positiva ▲' : 'Negativa ▼', 'signo ' + signo);
+  kpis += kpi('Intensidad', fuerzaCorr(res.r), '|r| = ' + fmt(Math.abs(res.r), 3));
+  kpis += kpi('Determinación r²', pct(res.r2 * 100, 1), 'varianza compartida');
+  kpis += kpi('Estadístico t', fmt(res.t, 3), 'gl = ' + fmtEnt(res.gl));
+  kpis += kpi('Valor p (bilateral)', fmtP(res.p), 'α = ' + fmt(alfa, 2));
+  kpis += kpi('Decisión', rechaza ? 'ρ ≠ 0' : 'ρ = 0', rechaza ? 'p < α' : 'p ≥ α');
+
+  let h = '<div class="kpis">' + kpis + '</div>';
+  h += '<div class="grid g2">' +
+    '<div class="tarjeta tono"><h4>Contraste de hipótesis</h4>' +
+    '<p><strong>H₀:</strong> ρ = 0 (no existe correlación lineal en la población).</p>' +
+    '<p><strong>H₁:</strong> ρ ≠ 0 (existe correlación lineal).</p>' +
+    '<p><span class="formula">t = r · √((n − 2) / (1 − r²))</span> con ' + fmtEnt(res.gl) + ' grados de libertad.</p>' +
+    '<p><strong>Decisión:</strong> ' + (rechaza ? 'p &lt; α → se rechaza H₀: la correlación es significativa.' : 'p ≥ α → no se rechaza H₀: la correlación no es significativa.') + '</p></div>' +
+    '<div class="tarjeta tono"><h4>Dirección e intensidad</h4>' +
+    '<p><strong>Dirección ' + direccionCorr(res.r) + ':</strong> ' +
+    (res.r >= 0 ? 'a mayor ' + vX.nombre.toLowerCase() + ' tiende a observarse mayor ' + vY.nombre.toLowerCase()
+                : 'a mayor ' + vX.nombre.toLowerCase() + ' tiende a observarse menor ' + vY.nombre.toLowerCase()) + '.</p>' +
+    '<p><strong>Intensidad ' + fuerzaCorr(res.r) + ':</strong> |r| = ' + fmt(Math.abs(res.r), 3) +
+    ' se ubica en el rango de correlación ' + fuerzaCorr(res.r) + ' (convención: &lt; 0,10 muy débil; 0,10–0,30 débil; 0,30–0,50 moderada; 0,50–0,70 fuerte; &gt; 0,70 muy fuerte).</p>' +
+    '<p><strong>r² = ' + pct(res.r2 * 100) + '</strong> de la variabilidad de ' + vY.nombre.toLowerCase() +
+    ' se explica linealmente por ' + vX.nombre.toLowerCase() + '; el resto (' + pct((1 - res.r2) * 100) +
+    ') se debe a otros factores y al azar.</p></div></div>';
+
+  h += '<div class="aviso warn"><strong>Advertencia fundamental:</strong> la correlación <strong>no demuestra causalidad</strong>. Un valor de r = ' +
+    fmt(res.r, 3) + ' indica que las variables se mueven juntas, pero no que una produzca la otra: podría existir una variable confundidora (estrés, edad, horarios), una dirección inversa de la causa o simplemente coincidencia. Para afirmar causalidad harían experimentos con asignación aleatoria y control temporal, que este diseño transversal no tiene.</div>';
+
+  h += caja('¿Cómo se interpreta?', interpCorr(res, vX, vY, par, alfa, rechaza));
+  cont.innerHTML = h;
+}
+function interpCorr(res, vX, vY, par, alfa, rechaza) {
+  const dir = direccionCorr(res.r);
+  const fuerza = fuerzaCorr(res.r);
+  const tendencia = res.r >= 0 ? 'positiva' : 'negativa';
+  return '<ul>' +
+    '<li><b>Qué mide:</b> el coeficiente de Pearson mide la <strong>fuerza y la dirección de la relación lineal</strong> entre ' +
+    vX.nombre + ' (' + vX.unidad + ') y ' + vY.nombre + ' (' + vY.unidad + '). Toma valores entre −1 y +1: el signo indica la dirección y el valor absoluto, la intensidad.</li>' +
+    '<li><b>Cómo se interpreta su valor:</b> r = ' + fmt(res.r, 4) + ' → relación ' + dir + ' y de intensidad <strong>' +
+    fuerza + '</strong> (|r| = ' + fmt(Math.abs(res.r), 3) + '). Esto significa que, en general, ' +
+    (res.r >= 0 ? 'quienes tienen más ' + vX.nombre.toLowerCase() + ' tienden a tener más ' + vY.nombre.toLowerCase()
+                : 'quienes tienen más ' + vX.nombre.toLowerCase() + ' tienden a tener menos ' + vY.nombre.toLowerCase()) +
+    ', aunque con ' + (fuerza === 'muy débil' || fuerza === 'débil' ? 'muchas excepciones' : 'dispersión apreciable') +
+    ' alrededor de la tendencia. r² = ' + pct(res.r2 * 100) + ' indica que esa línea explica ' + pct(res.r2 * 100) +
+    ' de la variación de ' + vY.nombre.toLowerCase() + '.</li>' +
+    '<li><b>Qué aporta al tema:</b> cuantifica en una sola cifra el vínculo entre <strong>actividad física y sueño</strong> (o las variables que elijas), permitiendo comparar la dirección esperada por la hipótesis con la efectivamente observada.</li>' +
+    '<li><b>Conclusiones justificadas:</b> ' + (rechaza
+        ? 'la correlación es estadísticamente significativa (t = ' + fmt(res.t, 3) + ', gl = ' + fmtEnt(res.gl) + ', p = ' + fmtP(res.p) +
+          ' &lt; α = ' + fmt(alfa, 2) + '), por lo que la relación ' + tendencia + ' observada no se atribuye razonablemente al azar.'
+        : 'la correlación no es significativa (p = ' + fmtP(res.p) + ' ≥ α = ' + fmt(alfa, 2) +
+          '): la relación ' + tendencia + ' detectada podría deberse al azar y no debería interpretarse como un patrón real.') +
+      ' Se usaron ' + fmtEnt(res.n) + ' pares completos' + (par.faltantes ? ', omitiendo ' + par.faltantes + ' con datos faltantes' : '') + '.</li>' +
+    '<li><b>Limitaciones:</b> Pearson captura solo relaciones <strong>lineales</strong>: una relación curvilínea puede dar r ≈ 0; es sensible a <strong>valores extremos</strong>; no distingue causalidad; y asume mediciones sin error. Con datos sintéticos, autorreportados y de corte transversal, el resultado es descriptivo de esta muestra y no generalizable.</li>' +
+    '</ul>';
+}
+
+/* ============================================================
+   Regresión lineal simple
+   ============================================================ */
+function modeloActual() {
+  const idX = $('selRegX').value, idY = $('selRegY').value;
+  if (!idX || !idY || idX === idY) return { error: 'vars' };
+  const par = paresXY(idX, idY, datos);
+  if (par.xs.length < 3) return { error: 'pocos', par: par };
+  const res = regresion(par.xs, par.ys);
+  if (res.error) return { error: 'calc', msg: res.error, par: par };
+  return { res: res, par: par, idX: idX, idY: idY, vX: MAP[idX], vY: MAP[idY] };
+}
+function ecuacionTexto(res) {
+  const b1 = res.b1;
+  const op = b1 >= 0 ? '+' : '−';
+  return 'ŷ = ' + fmt(res.b0, 3) + ' ' + op + ' ' + fmt(Math.abs(b1), 5) + ' · x';
+}
+function renderReg() {
+  const m = modeloActual();
+  const cont = $('regResultado');
+  const alfa = Number($('selAlfa').value);
+  if (m.error === 'vars') {
+    $('rangoX').textContent = '';
+    cont.innerHTML = aviso('Selecciona <strong>dos variables cuantitativas distintas</strong> para ajustar la recta de regresión.', 'warn');
+    return;
+  }
+  if (m.error === 'pocos') {
+    $('rangoX').textContent = '';
+    cont.innerHTML = aviso('Solo hay <strong>' + m.par.xs.length + '</strong> pares completos; se necesitan al menos 3 para ajustar una recta.', 'error');
+    return;
+  }
+  if (m.error === 'calc') { $('rangoX').textContent = ''; cont.innerHTML = aviso(m.msg, 'error'); return; }
+
+  const res = m.res, vX = m.vX, vY = m.vY;
+  $('rangoX').textContent = 'Rango observado de X: ' + fmt(res.minX, 2) + ' a ' + fmt(res.maxX, 2) + ' ' + vX.unidad;
+  const rechaza = res.pB1 !== null && res.pB1 < alfa;
+
+  let kpis = '';
+  kpis += kpi('N (pares completos)', fmtEnt(res.n), m.par.faltantes ? m.par.faltantes + ' faltantes' : 'sin faltantes');
+  kpis += kpi('Pendiente (b₁)', fmt(res.b1, 5), vX.unidad + ' → ' + vY.unidad);
+  kpis += kpi('Intercepto (b₀)', fmt(res.b0, 3), 'ŷ cuando x = 0');
+  kpis += kpi('Determinación R²', pct(res.r2 * 100, 2), 'varianza explicada');
+  kpis += kpi('Correlación r', fmt(res.r, 4), fuerzaCorr(res.r));
+  kpis += kpi('Error estándar', fmt(res.sEst, 3), 'desviación de los residuos');
+  kpis += kpi('t de la pendiente', fmt(res.tB1, 3), 'gl = ' + fmtEnt(res.gl));
+  kpis += kpi('Valor p (pendiente)', fmtP(res.pB1), 'α = ' + fmt(alfa, 2));
+
+  const filasReg = res.residuos.slice().sort((a, b) => a.x - b.x).map(r => [
+    fmt(r.x, 2), fmt(r.y, 2), fmt(r.ye, 3), (r.res >= 0 ? '+' : '−') + fmt(Math.abs(r.res), 3)
+  ]);
+
+  let h = '<div class="kpis">' + kpis + '</div>';
+  h += '<div class="ecuacion">' + ecuacionTexto(res) +
+    ' &nbsp;&nbsp;<span style="font-size:.8rem;color:#64748B">(' + vY.nombre + ' en función de ' + vX.nombre + ')</span></div>';
+  h += '<div class="grid g2">' +
+    '<div class="tarjeta tono"><h4>Elementos del modelo</h4><ul class="lista-limpia">' +
+    '<li><strong>Pendiente b₁ = ' + fmt(res.b1, 5) + ':</strong> por cada aumento de 1 ' + vX.unidad +
+    ' en ' + vX.nombre.toLowerCase() + ', ' + (res.b1 >= 0 ? 'aumenta' : 'disminuye') + ' ' + fmt(Math.abs(res.b1), 4) +
+    ' ' + vY.unidad + ' en ' + vY.nombre.toLowerCase() + ' (valor estimado).</li>' +
+    '<li><strong>Intercepto b₀ = ' + fmt(res.b0, 3) + ':</strong> valor estimado de ŷ cuando x = 0.' +
+    (res.minX > 0 ? ' Como el mínimo observado de X es ' + fmt(res.minX, 2) + ', x = 0 queda fuera del rango: el intercepto es un ancla matemática, no una predicción interpretable.' : '') + '</li>' +
+    '<li><strong>R² = ' + pct(res.r2 * 100, 2) + ':</strong> proporción de la variabilidad de ' + vY.nombre.toLowerCase() +
+    ' que el modelo lineal explica con ' + vX.nombre.toLowerCase() + '.</li>' +
+    '<li><strong>Error estándar de la estimación:</strong> ' + fmt(res.sEst, 3) + ' ' + vY.unidad +
+    ', dispersión típica de los valores observados respecto de la recta.</li></ul></div>' +
+    '<div class="tarjeta tono"><h4>Contraste de la pendiente</h4>' +
+    '<p><strong>H₀:</strong> b₁ = 0 (la recta no aporta predicción; X no explica Y).</p>' +
+    '<p><strong>H₁:</strong> b₁ ≠ 0 (la pendiente es significativa).</p>' +
+    '<p><span class="formula">t = b₁ / EE(b₁)</span> → t = ' + fmt(res.tB1, 3) + ', gl = ' + fmtEnt(res.gl) +
+    ', p = ' + fmtP(res.pB1) + '.</p>' +
+    '<p><strong>Decisión:</strong> ' + (rechaza ? 'p &lt; α → la pendiente es significativa.' : 'p ≥ α → la pendiente no es significativa.') + '</p></div></div>';
+
+  h += '<h4>Valores observados y estimados</h4>';
+  h += '<div class="tabla-scroll" style="max-height:320px">' +
+    '<table class="datos"><thead><tr><th class="num">' + vX.nombre + ' (x)</th><th class="num">' + vY.nombre +
+    ' observado (y)</th><th class="num">Valor estimado (ŷ)</th><th class="num">Residuo (y − ŷ)</th></tr></thead><tbody>' +
+    filasReg.map(f => '<tr><td class="num">' + f[0] + '</td><td class="num">' + f[1] +
+      '</td><td class="num">' + f[2] + '</td><td class="num">' + f[3] + '</td></tr>').join('') +
+    '</tbody></table></div>' +
+    '<p class="pie-tabla">Los residuos miden el error de predicción de cada caso; su suma es cercana a cero por construcción de mínimos cuadrados. Cuanto más concentrados estén alrededor de cero, mejor será el ajuste.</p>';
+
+  h += '<div class="aviso warn"><strong>Predicciones prudentes:</strong> la recta solo debe usarse dentro del rango observado de X (' +
+    fmt(res.minX, 2) + ' – ' + fmt(res.maxX, 2) + ' ' + vX.unidad + '). Extrapolar hacia valores no observados produce estimaciones poco fiables, y R² = ' +
+    pct(res.r2 * 100, 2) + ' recuerda que ' + pct((1 - res.r2) * 100, 2) + ' de la variabilidad queda sin explicar.</div>';
+
+  h += caja('¿Cómo se interpreta?', interpReg(res, vX, vY, alfa, rechaza));
+  cont.innerHTML = h;
+}
+function interpReg(res, vX, vY, alfa, rechaza) {
+  const dir = res.b1 >= 0 ? 'aumenta' : 'disminuye';
+  const interpretable = res.minX <= 0 && res.maxX >= 0;
+  return '<ul>' +
+    '<li><b>Qué mide cada elemento:</b> la <strong>pendiente</strong> (b₁ = ' + fmt(res.b1, 5) +
+    ') indica cuánto cambia ' + vY.nombre.toLowerCase() + ' por cada unidad adicional de ' + vX.nombre.toLowerCase() +
+    '; el <strong>intercepto</strong> (b₀ = ' + fmt(res.b0, 3) + ') es el valor estimado de ŷ cuando x = 0; el <strong>R²</strong> (' +
+    pct(res.r2 * 100, 2) + ') es la proporción de la variabilidad de ' + vY.nombre.toLowerCase() +
+    ' explicada por el modelo lineal; y los <strong>residuos</strong> (desviación estándar ' + fmt(res.sEst, 3) +
+    ' ' + vY.unidad + ') miden el error típico de predicción.</li>' +
+    '<li><b>Cómo se leen los valores:</b> la ecuación estimada es <span class="formula">' + ecuacionTexto(res) +
+    '</span>. Esto significa que, dentro de la muestra, cada incremento de 1 ' + vX.unidad + ' en ' + vX.nombre.toLowerCase() +
+    ' se asocia con un cambio de ' + fmt(Math.abs(res.b1), 4) + ' ' + vY.unidad + ' en ' + vY.nombre.toLowerCase() +
+    ' (' + dir + '). Con R² = ' + pct(res.r2 * 100, 2) + ', el modelo aprovecha ' + pct(res.r2 * 100, 2) +
+    ' de la variación de la variable respuesta; la pendiente resulta ' + (rechaza ? 'estadísticamente significativa' : 'no significativa') +
+    ' (p = ' + fmtP(res.pB1) + ' frente a α = ' + fmt(alfa, 2) + ').</li>' +
+    '<li><b>Qué aporta al tema:</b> la recta traduce la asociación en una herramienta de predicción: permite estimar cuántas horas de sueño (u otra variable de respuesta) corresponderían a un determinado nivel de actividad física, útil para fomentar metas realistas.</li>' +
+    '<li><b>Conclusiones justificadas:</b> ' + (rechaza
+        ? 'el modelo es útil para predecir dentro de la muestra: la relación lineal es significativa y explica el ' + pct(res.r2 * 100, 2) + ' de la variabilidad.'
+        : 'el modelo no aporta una predicción fiable: la pendiente no difiere de cero, por lo que ajustar una recta no mejora respecto de predecir siempre la media de Y.') +
+      ' Puede afirmarse que, en promedio, ' + dir + ' en ' + vY.nombre.toLowerCase() + ' a medida que aumenta ' + vX.nombre.toLowerCase() + '.</li>' +
+    '<li><b>Limitaciones:</b> el modelo supone una relación <strong>lineal, aditiva y con errores homocedásticos</strong>; R² nunca indica causalidad; las predicciones son válidas solo dentro de ' +
+    fmt(res.minX, 2) + ' – ' + fmt(res.maxX, 2) + ' ' + vX.unidad +
+    (interpretable ? '' : ', y el intercepto (' + fmt(res.b0, 3) + ') queda fuera de ese rango, por lo que no debe interpretarse como un valor real') +
+    '. Al tratarse de datos sintéticos transversales, el modelo describe esta muestra y no establece que la actividad física cause cambios en el sueño.</li>' +
+    '</ul>';
+}
+function renderPrediccion() {
+  const cont = $('predResultado');
+  const m = modeloActual();
+  if (m.error) { cont.innerHTML = ''; return; }
+  const crudo = ($('inpPredX').value || '').trim();
+  if (crudo === '') {
+    cont.innerHTML = aviso('Ingresa un valor de <strong>' + m.vX.nombre + '</strong> y pulsa «Predecir ŷ» para obtener la estimación del modelo.', 'info');
+    return;
+  }
+  const x = Number(crudo);
+  if (Number.isNaN(x)) { cont.innerHTML = aviso('El valor ingresado no es numérico.', 'error'); return; }
+  const res = m.res;
+  const ye = res.b0 + res.b1 * x;
+  const fuera = x < res.minX || x > res.maxX;
+  let h = '<div class="kpis">' +
+    kpi('Valor de X', fmt(x, 2), m.vX.unidad) +
+    kpi('Predicción ŷ', fmt(ye, 3), m.vY.unidad) +
+    kpi('R² del modelo', pct(res.r2 * 100, 2), 'varianza explicada') +
+    kpi('Rango válido', fmt(res.minX, 2) + ' – ' + fmt(res.maxX, 2), m.vX.unidad) +
+    '</div>';
+  h += '<div class="ecuacion">ŷ = ' + fmt(res.b0, 3) + ' ' + (res.b1 >= 0 ? '+' : '−') + ' ' +
+    fmt(Math.abs(res.b1), 5) + ' · ' + fmt(x, 2) + ' = ' + fmt(ye, 3) + ' ' + m.vY.unidad + '</div>';
+  if (fuera) {
+    h += aviso('<strong>⚠ Fuera del rango observado:</strong> el valor ' + fmt(x, 2) + ' ' + m.vX.unidad +
+      ' no está entre ' + fmt(res.minX, 2) + ' y ' + fmt(res.maxX, 2) + '. La predicción es una <strong>extrapolación</strong> y no es confiable; interpreta el resultado solo como ejercicio metodológico.', 'warn');
+  } else {
+    h += aviso('<strong>✓ Dentro del rango observado:</strong> la estimación es válida como predicción condicionada al modelo. Recuerda que el error típico de la estimación es ' +
+      fmt(res.sEst, 3) + ' ' + m.vY.unidad + ' y que R² = ' + pct(res.r2 * 100, 2) + ' deja sin explicar ' +
+      pct((1 - res.r2) * 100, 2) + ' de la variabilidad.', 'ok');
+  }
+  cont.innerHTML = h;
+}
+
+/* ============================================================
+   Utilidades de dibujo (Canvas nativo)
+   ============================================================ */
+const C_AZUL = '#245B70', C_VERDE = '#6B9B83', C_AMARILLO = '#F2C66D';
+const C_GRID = '#E2E8F0', C_TEXTO = '#263238', C_TEXTO2 = '#64748B', C_EJE = '#94A3B8';
+const FUENTE = '12px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+
+function prepararLienzo(canvas, alto) {
+  const dpr = window.devicePixelRatio || 1;
+  const w = Math.max(280, canvas.clientWidth || (canvas.parentElement ? canvas.parentElement.clientWidth : 600) || 600);
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(alto * dpr);
+  canvas.style.width = '100%';
+  canvas.style.height = alto + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, alto);
+  ctx.font = FUENTE;
+  ctx.lineJoin = 'round';
+  return { ctx: ctx, w: w, h: alto };
+}
+function ticksPara(min, max, cant) {
+  cant = cant || 5;
+  if (!(max > min)) return [min];
+  const paso0 = (max - min) / cant;
+  const mag = Math.pow(10, Math.floor(Math.log10(paso0)));
+  const norm = paso0 / mag;
+  let paso;
+  if (norm < 1.5) paso = 1 * mag; else if (norm < 3) paso = 2 * mag;
+  else if (norm < 7) paso = 5 * mag; else paso = 10 * mag;
+  const ticks = [];
+  let t = Math.ceil(min / paso) * paso;
+  for (; t <= max + 1e-9; t += paso) ticks.push(Number((Math.round(t / paso) * paso).toFixed(6)));
+  return ticks;
+}
+function acortar(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+function ejeTitulo(ctx, texto, x, y, rotado) {
+  ctx.save();
+  ctx.translate(x, y);
+  if (rotado) ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = C_TEXTO2;
+  ctx.font = 'bold 11.5px system-ui, "Segoe UI", Roboto, Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(texto, 0, 0);
+  ctx.restore();
+  ctx.font = FUENTE;
+}
+function marcoEjes(ctx, mIzq, mArr, ancho, alto) {
+  ctx.strokeStyle = C_EJE;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(mIzq + .5, mArr + .5);
+  ctx.lineTo(mIzq + .5, mArr + alto + .5);
+  ctx.lineTo(mIzq + ancho + .5, mArr + alto + .5);
+  ctx.stroke();
+}
+function rejillaHorizontal(ctx, ticks, y, mIzq, ancho) {
+  ctx.strokeStyle = C_GRID;
+  ctx.lineWidth = 1;
+  ctx.fillStyle = C_TEXTO2;
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  ticks.forEach(t => {
+    const yy = Math.round(y(t)) + .5;
+    ctx.beginPath(); ctx.moveTo(mIzq, yy); ctx.lineTo(mIzq + ancho, yy); ctx.stroke();
+    ctx.fillText(fmt(t, 0), mIzq - 8, yy);
+  });
+  ctx.font = FUENTE;
+}
+
+/* ---------- Gráfico de barras ---------- */
+function dibujarBarras(canvas, cats, vals, opts) {
+  opts = opts || {};
+  const alto = opts.alto || 320;
+  const li = prepararLienzo(canvas, alto);
+  const ctx = li.ctx, w = li.w, h = li.h;
+  ctx.textAlign = 'center';
+  if (!cats.length) { ctx.fillStyle = C_TEXTO2; ctx.fillText('Sin datos para graficar', w / 2, h / 2); return; }
+  const mIzq = 58, mDer = 14, mArr = 22, mAbajo = (opts.xTitulo ? 56 : 46);
+  const ancho = w - mIzq - mDer, hGraf = h - mArr - mAbajo;
+  const maxV = Math.max.apply(null, vals.concat([0]));
+  const minV = Math.min.apply(null, vals.concat([0]));
+  const ticks = ticksPara(minV, maxV, 5);
+  const yMax = Math.max(ticks[ticks.length - 1], maxV);
+  const yMin = Math.min(ticks[0], minV);
+  const escala = yMax - yMin || 1;
+  const y = v => mArr + hGraf - (v - yMin) / escala * hGraf;
+  rejillaHorizontal(ctx, ticks, y, mIzq, ancho);
+  marcoEjes(ctx, mIzq, mArr, ancho, hGraf);
+  if (opts.yTitulo) ejeTitulo(ctx, opts.yTitulo, 14, mArr + hGraf / 2, true);
+  if (opts.xTitulo) ejeTitulo(ctx, opts.xTitulo, mIzq + ancho / 2, h - 8, false);
+
+  const paso = ancho / cats.length;
+  const bw = Math.min(paso * 0.6, 96);
+  const yCero = y(0);
+  cats.forEach((c, i) => {
+    const cx = mIzq + paso * i + paso / 2;
+    const yv = y(vals[i]);
+    const altoBar = Math.abs(yv - yCero);
+    ctx.fillStyle = (opts.colores && opts.colores[i]) ? opts.colores[i] : C_AZUL;
+    ctx.fillRect(cx - bw / 2, Math.min(yv, yCero), bw, Math.max(altoBar, 1));
+    ctx.fillStyle = C_TEXTO;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(fmt(vals[i], opts.dec === undefined ? 1 : opts.dec), cx, Math.min(yv, yCero) - 4);
+    ctx.save();
+    ctx.translate(cx, mArr + hGraf + 7);
+    if (opts.rotar) { ctx.rotate(-Math.PI / 5); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; }
+    else { ctx.textAlign = 'center'; ctx.textBaseline = 'top'; }
+    ctx.fillStyle = C_TEXTO2;
+    ctx.fillText(acortar(c, opts.rotar ? 22 : 14), 0, 0);
+    ctx.restore();
+  });
+  ctx.font = FUENTE;
+}
+
+/* ---------- Histograma con polígono opcional ---------- */
+function dibujarHistograma(canvas, grupo, opts) {
+  opts = opts || {};
+  const alto = opts.alto || 330;
+  const li = prepararLienzo(canvas, alto);
+  const ctx = li.ctx, w = li.w, h = li.h;
+  if (!grupo || !grupo.intervalos) { ctx.fillStyle = C_TEXTO2; ctx.textAlign = 'center'; ctx.fillText('Sin datos', w / 2, h / 2); return; }
+  const ivs = grupo.intervalos;
+  const mIzq = 54, mDer = 16, mArr = 22, mAbajo = (opts.xTitulo ? 58 : 50);
+  const ancho = w - mIzq - mDer, hGraf = h - mArr - mAbajo;
+  const maxFa = Math.max.apply(null, ivs.map(i => i.fa).concat([1]));
+  const ticks = ticksPara(0, maxFa, 5);
+  const yMax = Math.max(ticks[ticks.length - 1], maxFa);
+  const y = v => mArr + hGraf - v / yMax * hGraf;
+  rejillaHorizontal(ctx, ticks, y, mIzq, ancho);
+  marcoEjes(ctx, mIzq, mArr, ancho, hGraf);
+  if (opts.yTitulo) ejeTitulo(ctx, opts.yTitulo, 14, mArr + hGraf / 2, true);
+  if (opts.xTitulo) ejeTitulo(ctx, opts.xTitulo, mIzq + ancho / 2, h - 8, false);
+
+  const dec = opts.dec === undefined ? 1 : opts.dec;
+  if (grupo.unico) {
+    const bw = Math.min(ancho * 0.4, 90);
+    const cx = mIzq + ancho / 2;
+    ctx.fillStyle = C_VERDE;
+    ctx.fillRect(cx - bw / 2, y(grupo.n), bw, hGraf - (y(grupo.n) - mArr));
+    ctx.fillStyle = C_TEXTO; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(fmt(grupo.n, 0), cx, y(grupo.n) - 4);
+    ctx.fillStyle = C_TEXTO2; ctx.textBaseline = 'top';
+    ctx.fillText('valor ' + fmt(grupo.valor, dec), cx, mArr + hGraf + 8);
+    ctx.font = FUENTE;
+    return;
+  }
+  const escalaX = v => mIzq + (v - grupo.inicio) / (grupo.ancho * grupo.k) * ancho;
+  ivs.forEach((iv, i) => {
+    const x0 = escalaX(iv.li), x1 = escalaX(iv.ls);
+    ctx.fillStyle = C_VERDE;
+    ctx.fillRect(x0, y(iv.fa), Math.max(x1 - x0 - 1, 1), hGraf - (y(iv.fa) - mArr));
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0 + .5, y(iv.fa) + .5, Math.max(x1 - x0 - 2, 1), Math.max(hGraf - (y(iv.fa) - mArr) - 1, 1));
+    if (iv.fa > 0) {
+      ctx.fillStyle = C_TEXTO; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText(fmt(iv.fa, 0), (x0 + x1) / 2, y(iv.fa) - 3);
+    }
+  });
+  /* etiquetas de los límites de clase */
+  ctx.fillStyle = C_TEXTO2;
+  ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+  const salto = grupo.k > 9 ? 2 : 1;
+  for (let i = 0; i <= grupo.k; i += salto) {
+    const v = Number((grupo.inicio + i * grupo.ancho).toFixed(6));
+    ctx.save();
+    ctx.translate(escalaX(v), mArr + hGraf + 6);
+    ctx.rotate(-Math.PI / 5);
+    ctx.fillText(fmt(v, dec), 0, 0);
+    ctx.restore();
+  }
+  if (grupo.k % salto !== 0) {
+    const v = Number((grupo.inicio + grupo.k * grupo.ancho).toFixed(6));
+    ctx.save();
+    ctx.translate(escalaX(v), mArr + hGraf + 6);
+    ctx.rotate(-Math.PI / 5);
+    ctx.fillText(fmt(v, dec), 0, 0);
+    ctx.restore();
+  }
+  /* polígono de frecuencias */
+  if (opts.poligono) {
+    ctx.strokeStyle = C_AMARILLO;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ivs.forEach((iv, i) => {
+      const px = escalaX(iv.marca), py = y(iv.fa);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+    ctx.fillStyle = C_AMARILLO;
+    ivs.forEach(iv => {
+      ctx.beginPath();
+      ctx.arc(escalaX(iv.marca), y(iv.fa), 3.4, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+  ctx.font = FUENTE;
+}
+
+/* ---------- Gráfico circular ---------- */
+function dibujarTorta(canvas, cats, vals, opts) {
+  opts = opts || {};
+  const alto = opts.alto || 340;
+  const li = prepararLienzo(canvas, alto);
+  const ctx = li.ctx, w = li.w, h = li.h;
+  const total = vals.reduce((s, x) => s + x, 0);
+  if (!total) { ctx.fillStyle = C_TEXTO2; ctx.textAlign = 'center'; ctx.fillText('Sin datos', w / 2, h / 2); return; }
+  const lado = w > 560;
+  const r = lado ? Math.min(h * 0.36, w * 0.26) : Math.min(h * 0.26, w * 0.34);
+  const cx = lado ? Math.max(r + 20, w * 0.26) : w / 2;
+  const cy = lado ? h / 2 : r + 14;
+  let ang = -Math.PI / 2;
+  cats.forEach((c, i) => {
+    const frac = vals[i] / total;
+    if (frac <= 0) return;
+    const fin = ang + frac * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, ang, fin);
+    ctx.closePath();
+    ctx.fillStyle = PALETA[i % PALETA.length];
+    ctx.fill();
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    if (frac >= 0.06) {
+      const mid = (ang + fin) / 2;
+      ctx.fillStyle = (i % PALETA.length === 2) ? '#4A3A12' : '#FFFFFF';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pct(frac * 100, 1), cx + Math.cos(mid) * r * 0.63, cy + Math.sin(mid) * r * 0.63);
+    }
+    ang = fin;
+  });
+  /* leyenda */
+  const pasoFila = 19;
+  let lx, ly0;
+  if (lado) { lx = cx + r + 26; ly0 = cy - (cats.length * pasoFila) / 2 + 8; }
+  else { lx = 14; ly0 = cy + r + 20; }
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  cats.forEach((c, i) => {
+    const yy = ly0 + i * pasoFila;
+    if (yy > h - 6) return;
+    ctx.fillStyle = PALETA[i % PALETA.length];
+    ctx.fillRect(lx, yy - 6, 12, 12);
+    ctx.fillStyle = C_TEXTO;
+    const etiqueta = acortar(c, lado ? 26 : 34) + ' · ' + fmtEnt(vals[i]) + ' (' + pct(vals[i] / total * 100, 1) + ')';
+    ctx.fillText(etiqueta, lx + 18, yy);
+  });
+}
+
+/* ---------- Diagrama de dispersión ---------- */
+function dibujarDispersion(canvas, pts, opts) {
+  opts = opts || {};
+  const alto = opts.alto || 350;
+  const li = prepararLienzo(canvas, alto);
+  const ctx = li.ctx, w = li.w, h = li.h;
+  if (!pts.length) { ctx.fillStyle = C_TEXTO2; ctx.textAlign = 'center'; ctx.fillText('Sin datos', w / 2, h / 2); return; }
+  const mIzq = 64, mDer = 20, mArr = 20, mAbajo = (opts.xTitulo ? 56 : 46);
+  const ancho = w - mIzq - mDer, hGraf = h - mArr - mAbajo;
+  let minX = Math.min.apply(null, pts.map(p => p.x));
+  let maxX = Math.max.apply(null, pts.map(p => p.x));
+  let minY = Math.min.apply(null, pts.map(p => p.y));
+  let maxY = Math.max.apply(null, pts.map(p => p.y));
+  if (minX === maxX) { minX -= 1; maxX += 1; }
+  if (minY === maxY) { minY -= 1; maxY += 1; }
+  const padX = (maxX - minX) * 0.06, padY = (maxY - minY) * 0.1;
+  minX -= padX; maxX += padX; minY -= padY; maxY += padY;
+  const x = v => mIzq + (v - minX) / (maxX - minX) * ancho;
+  const y = v => mArr + hGraf - (v - minY) / (maxY - minY) * hGraf;
+  const tx = ticksPara(minX, maxX, 6), ty = ticksPara(minY, maxY, 5);
+  rejillaHorizontal(ctx, ty, y, mIzq, ancho);
+  /* líneas verticales */
+  ctx.strokeStyle = C_GRID; ctx.lineWidth = 1;
+  tx.forEach(t => {
+    const xx = Math.round(x(t)) + .5;
+    ctx.beginPath(); ctx.moveTo(xx, mArr); ctx.lineTo(xx, mArr + hGraf); ctx.stroke();
+  });
+  marcoEjes(ctx, mIzq, mArr, ancho, hGraf);
+  /* etiquetas del eje x */
+  ctx.fillStyle = C_TEXTO2; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  tx.forEach(t => { ctx.fillText(fmt(t, opts.decX === undefined ? 0 : opts.decX), x(t), mArr + hGraf + 7); });
+  if (opts.xTitulo) ejeTitulo(ctx, opts.xTitulo, mIzq + ancho / 2, h - 8, false);
+  if (opts.yTitulo) ejeTitulo(ctx, opts.yTitulo, 14, mArr + hGraf / 2, true);
+
+  /* recta de regresión */
+  if (opts.recta) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(mIzq, mArr, ancho, hGraf);
+    ctx.clip();
+    ctx.strokeStyle = C_AMARILLO;
+    ctx.lineWidth = 2.6;
+    ctx.beginPath();
+    ctx.moveTo(x(minX), y(opts.recta.b0 + opts.recta.b1 * minX));
+    ctx.lineTo(x(maxX), y(opts.recta.b0 + opts.recta.b1 * maxX));
+    ctx.stroke();
+    ctx.restore();
+  }
+  /* puntos */
+  pts.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(x(p.x), y(p.y), 4.2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(36,91,112,.62)';
+    ctx.fill();
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+}
+
+/* ============================================================
+   Gráficos y sus interpretaciones
+   ============================================================ */
+function leyendaHTML(cats, vals, colores, sufijo) {
+  const total = vals.reduce((s, x) => s + x, 0);
+  return cats.map((c, i) =>
+    '<span><i style="background:' + (colores[i % colores.length]) + '"></i>' + escapeHTML(c) + ' · ' +
+    fmtEnt(vals[i]) + (sufijo || '') + (total ? ' (' + pct(vals[i] / total * 100, 1) + ')' : '') + '</span>').join('');
+}
+function renderGraficos() {
+  renderBarraGraf();
+  renderHistGraf();
+  renderPieGraf();
+  renderDispGraf();
+  renderCompGraf();
+}
+function renderBarraGraf() {
+  const id = $('selBarVar').value;
+  const v = MAP[id];
+  if (!v) return;
+  const f = frecuenciasCategorica(id, datos);
+  const cats = f.filas.map(r => r.nivel);
+  const vals = f.filas.map(r => r.fa);
+  const colores = cats.map((_, i) => PALETA[i % PALETA.length]);
+  dibujarBarras($('cvBarra'), cats, vals, { yTitulo: 'frecuencia absoluta (n)', xTitulo: v.nombre, colores: colores, dec: 0 });
+  $('leyBarra').innerHTML = leyendaHTML(cats, vals, colores);
+  const con = f.filas.filter(r => r.fa > 0);
+  if (!con.length) { $('interpBarra').textContent = 'Sin datos válidos para graficar.'; return; }
+  const top = con.slice().sort((a, b) => b.fa - a.fa)[0];
+  const bottom = con.slice().sort((a, b) => a.fa - b.fa)[0];
+  $('interpBarra').innerHTML = '<strong>Interpretación:</strong> la altura de cada barra representa la frecuencia absoluta de <em>' +
+    v.nombre + '</em>. La categoría más frecuente es «' + escapeHTML(top.nivel) + '» con ' + fmtEnt(top.fa) +
+    ' casos (' + pct(top.fr) + ') y la menos frecuente «' + escapeHTML(bottom.nivel) + '» con ' + fmtEnt(bottom.fa) +
+    ' (' + pct(bottom.fr) + '). El gráfico complementa a la tabla de frecuencias: hace visible de un vistazo la concentración de la muestra en cada nivel.';
+}
+function renderHistGraf() {
+  const id = $('selHistVar').value;
+  const v = MAP[id];
+  if (!v) return;
+  const g = frecuenciasAgrupadas(id, datos);
+  if (!g.grupo) { $('interpHist').textContent = 'Sin datos válidos.'; return; }
+  const dec = decimalesDe(v);
+  const conPol = $('chkPoligono').checked;
+  dibujarHistograma($('cvHist'), g.grupo, {
+    yTitulo: 'frecuencia absoluta (n)',
+    xTitulo: v.nombre + ' (' + v.unidad + ')',
+    poligono: conPol, dec: dec, alto: 330
+  });
+  $('leyHist').innerHTML =
+    '<span><i style="background:' + C_VERDE + '"></i>Frecuencia por intervalo (n)</span>' +
+    (conPol ? '<span><i style="background:' + C_AMARILLO + '"></i>Polígono de frecuencias (marca de clase)</span>' : '') +
+    '<span>Intervalos: ' + (g.grupo.unico ? 'valor único' : g.grupo.k + ' de amplitud ' + fmt(g.grupo.ancho, dec)) + '</span>';
+  if (g.grupo.unico) { $('interpHist').innerHTML = '<strong>Interpretación:</strong> todos los valores coinciden en ' + fmt(g.grupo.valor, dec) + ' ' + v.unidad + '; no hay dispersión que representar.'; return; }
+  const r = resumen(valoresValidos(datos, id));
+  let modal = null;
+  g.grupo.intervalos.forEach(iv => { if (!modal || iv.fa > modal.fa) modal = iv; });
+  $('interpHist').innerHTML = '<strong>Interpretación:</strong> cada barra cubre un intervalo de amplitud ' +
+    fmt(g.grupo.ancho, dec) + ' ' + v.unidad + '. La clase modal es [' + fmt(modal.li, dec) + ' , ' + fmt(modal.ls, dec) +
+    ') con ' + fmtEnt(modal.fa) + ' casos (' + pct(modal.fr) + '), la de mayor concentración. Comparando media (' +
+    fmt(r.media, 2) + ') y mediana (' + fmt(r.mediana, 2) + ') la distribución es <strong>' + sesgoDe(r.media, r.mediana) +
+    '</strong>.' + (conPol ? ' El polígono de frecuencias une los valores de cada marca de clase y facilita ver la forma (asimetría, picos) de la distribución; se superpone al histograma sin sustituirlo.' : '') +
+    ' Activa la casilla «polígono» para verlo.';
+}
+function renderPieGraf() {
+  const id = $('selPieVar').value;
+  const v = MAP[id];
+  if (!v) return;
+  const f = frecuenciasCategorica(id, datos);
+  const con = f.filas.filter(r => r.fa > 0);
+  const cats = con.map(r => r.nivel), vals = con.map(r => r.fa);
+  const colores = cats.map((_, i) => PALETA[i % PALETA.length]);
+  dibujarTorta($('cvPie'), cats, vals, { alto: 340 });
+  $('leyPie').innerHTML = leyendaHTML(cats, vals, colores);
+  if (!con.length) { $('interpPie').textContent = 'Sin datos válidos.'; return; }
+  const total = f.total;
+  const top = con.slice().sort((a, b) => b.fa - a.fa)[0];
+  let txt = '<strong>Interpretación:</strong> cada porción representa la participación de «' + escapeHTML(top.nivel) +
+    '» con ' + pct(top.fr / 100 * 100) + ' del total de casos válidos (n = ' + fmtEnt(total) + '). ';
+  if (cats.length > 6) {
+    txt += '<span style="color:#8A4B26"><strong>⚠ El gráfico circular no es ideal aquí:</strong> con ' + cats.length +
+      ' categorías las porciones se vuelven difíciles de comparar; para más de seis niveles se recomienda el gráfico de barras, que permite apreciar mejor las diferencias.</span>';
+  } else {
+    txt += 'El circular es adecuado porque la variable tiene ' + cats.length +
+      ' categorías y la suma de sus porciones equivale al 100 % de los casos válidos. Sirve para comunicar la composición de la muestra, no para comparar valores pequeños con precisión.';
+  }
+  $('interpPie').textContent = txt.replace(/<[^>]+>/g, '');
+  $('interpPie').innerHTML = txt;
+}
+function renderDispGraf() {
+  const idX = $('selScX').value, idY = $('selScY').value;
+  if (!idX || !idY || idX === idY) {
+    $('leyDisp').innerHTML = '';
+    $('interpDisp').innerHTML = '<strong>Selecciona dos variables distintas</strong> para dibujar el diagrama de dispersión.';
+    dibujarDispersion($('cvDisp'), [], {});
+    return;
+  }
+  const vX = MAP[idX], vY = MAP[idY];
+  const par = paresXY(idX, idY, datos);
+  if (par.xs.length < 3) {
+    $('interpDisp').innerHTML = 'Se necesitan al menos 3 pares completos; hay ' + par.xs.length + '.';
+    dibujarDispersion($('cvDisp'), [], {});
+    return;
+  }
+  const pts = par.xs.map((x, i) => ({ x: x, y: par.ys[i] }));
+  const c = pearson(par.xs, par.ys);
+  const reg = (c.error ? null : regresion(par.xs, par.ys));
+  dibujarDispersion($('cvDisp'), pts, {
+    xTitulo: vX.nombre + ' (' + vX.unidad + ')',
+    yTitulo: vY.nombre + ' (' + vY.unidad + ')',
+    recta: reg && !reg.error ? reg : null,
+    decX: decimalesDe(vX), decY: decimalesDe(vY), alto: 350
+  });
+  $('leyDisp').innerHTML =
+    '<span><i style="background:rgba(36,91,112,.62)"></i>Observaciones (n = ' + fmtEnt(par.xs.length) + ')</span>' +
+    (reg && !reg.error ? '<span><i style="background:' + C_AMARILLO + '"></i>Recta de regresión ŷ = ' + ecuacionTexto(reg) + '</span>' : '');
+  if (c.error) { $('interpDisp').innerHTML = escapeHTML(c.error); return; }
+  $('interpDisp').innerHTML = '<strong>Interpretación:</strong> cada punto es un participante en el plano (' +
+    vX.nombre.toLowerCase() + ', ' + vY.nombre.toLowerCase() + '). La nube de puntos muestra una tendencia <strong>' +
+    direccionCorr(c.r) + '</strong> de intensidad <strong>' + fuerzaCorr(c.r) + '</strong> (r = ' + fmt(c.r, 3) +
+    ', R² = ' + pct(c.r2 * 100, 1) + '). La línea amarilla es la recta de regresión que mejor se ajusta a los puntos por mínimos cuadrados: los puntos cercanos a la línea son los que el modelo predice bien y los alejados, los que explica mal. ' +
+    '<strong>La correlación y la recta describen asociación, no causalidad.</strong>';
+}
+function renderCompGraf() {
+  const idCat = $('selCompCat').value, idCuan = $('selCompCuan').value;
+  if (!idCat || !idCuan) return;
+  const vCat = MAP[idCat], vCuan = MAP[idCuan];
+  const grupos = vCat.niveles.map(n => {
+    const vals = datos.filter(d => d[idCat] === n).map(d => d[idCuan]).filter(esNumero);
+    return { nivel: n, vals: vals, fa: vals.length, media: vals.length ? media(vals) : null };
+  }).filter(g => g.fa > 0);
+  const cats = grupos.map(g => g.nivel);
+  const vals = grupos.map(g => g.media === null ? 0 : g.media);
+  const colores = cats.map((_, i) => PALETA[i % PALETA.length]);
+  dibujarBarras($('cvComp'), cats, vals, {
+    yTitulo: 'media de ' + vCuan.nombre + ' (' + vCuan.unidad + ')',
+    xTitulo: vCat.nombre, colores: colores, dec: 2, alto: 320
+  });
+  $('leyComp').innerHTML = grupos.map((g, i) =>
+    '<span><i style="background:' + colores[i] + '"></i>' + escapeHTML(g.nivel) + ' · media ' +
+    (g.media === null ? '—' : fmt(g.media, 2)) + ' (n = ' + fmtEnt(g.fa) + ')</span>').join('');
+  if (grupos.length < 2) { $('interpComp').innerHTML = 'Se necesitan al menos dos grupos con datos.'; return; }
+  const conMedia = grupos.filter(g => g.media !== null);
+  const mayor = conMedia.slice().sort((a, b) => b.media - a.media)[0];
+  const menor = conMedia.slice().sort((a, b) => a.media - b.media)[0];
+  const dif = mayor.media - menor.media;
+  const nGrupos = grupos.length;
+  let texto = '<strong>Interpretación:</strong> la altura de cada barra es la media de <em>' + vCuan.nombre +
+    '</em> dentro de cada nivel de <em>' + vCat.nombre + '</em>. El grupo «' + escapeHTML(mayor.nivel) +
+    '» presenta la media más alta (' + fmt(mayor.media, 2) + ' ' + vCuan.unidad + ') y «' + escapeHTML(menor.nivel) +
+    '» la más baja (' + fmt(menor.media, 2) + '), una diferencia de ' + fmt(dif, 2) + ' ' + vCuan.unidad + '. ';
+  if (nGrupos > 2) {
+    texto += '<strong>Limitación y alternativa:</strong> al comparar ' + nGrupos + ' grupos, la diferencia visual entre medias no basta para afirmar que sean distintas; la prueba adecuada es el <strong>ANOVA de un factor</strong> (o la t de Student si solo hay dos grupos), seguida de comparaciones múltiples con corrección. Aquí la comparación es descriptiva.';
+  } else {
+    texto += '<strong>Limitación:</strong> con dos grupos conviene contrastar la diferencia con una <strong>t de Student</strong> (o su no paramétrica, Mann-Whitney) antes de afirmar que las medias difieren; la barra por sí sola no informa de la significación estadística.';
+  }
+  $('interpComp').innerHTML = texto;
+}
+
+/* ============================================================
+   Interpretaciones y conclusiones generales
+   ============================================================ */
+function renderConclusiones() {
+  const cont = $('conclusiones');
+  if (!datos.length) { cont.innerHTML = vacio('No hay registros en la base.'); return; }
+  const n = datos.length;
+  const rEdad = resumen(valoresValidos(datos, 'edad'));
+  const rAf = resumen(valoresValidos(datos, 'af_min'));
+  const rHs = resumen(valoresValidos(datos, 'horas_sueno'));
+  const fSexo = frecuenciasCategorica('sexo', datos);
+  const fOcup = frecuenciasCategorica('ocupacion', datos);
+  const fCal = frecuenciasCategorica('calidad', datos);
+  const fInt = frecuenciasCategorica('af_int', datos);
+  const topDe = f => f.filas.filter(x => x.fa > 0).sort((a, b) => b.fa - a.fa)[0];
+
+  let h = '';
+
+  /* 1. Retrato de la muestra */
+  const topSexo = topDe(fSexo), topOcup = topDe(fOcup), topCal = topDe(fCal), topInt = topDe(fInt);
+  const pctMujeres = (fSexo.total ? (fSexo.filas.filter(x => x.nivel === 'Femenino')[0] || { fa: 0 }).fa / fSexo.total * 100 : 0);
+  h += caja('1 · Retrato de la muestra', '<ul>' +
+    '<li><b>Composición:</b> la base reúne <strong>' + fmtEnt(n) + ' registros</strong> (' +
+    (datos.filter(d => d.origen === 'manual').length) + ' manuales y ' +
+    (datos.filter(d => d.origen !== 'manual').length) + ' sintéticos) con una edad media de <strong>' +
+    fmt(rEdad.media, 1) + ' años</strong> (mediana ' + fmt(rEdad.mediana, 1) + ', rango ' +
+    fmt(rEdad.min, 0) + '–' + fmt(rEdad.max, 0) + '). Predomina el sexo ' + escapeHTML(topSexo.nivel) +
+    ' (' + pct(topSexo.fr) + ', ' + pct(pctMujeres) + ' son mujeres) y la ocupación «' + escapeHTML(topOcup.nivel) +
+    '» (' + pct(topOcup.fr) + ').</li>' +
+    '<li><b>Actividad física:</b> en promedio los participantes acumulan <strong>' + fmt(rAf.media, 0) +
+    ' minutos semanales</strong> (mediana ' + fmt(rAf.mediana, 0) + ', desviación estándar ' + fmt(rAf.desv, 0) +
+    '), con intensidad más frecuente «' + escapeHTML(topInt.nivel) + '» (' + pct(topInt.fr) + ').</li>' +
+    '<li><b>Sueño:</b> la media de descanso es de <strong>' + fmt(rHs.media, 2) + ' horas por noche</strong> (mediana ' +
+    fmt(rHs.mediana, 2) + ', S = ' + fmt(rHs.desv, 2) + '), y la calidad percibida predominante es «' +
+    escapeHTML(topCal.nivel) + '» (' + pct(topCal.fr) + ').</li>' +
+    '<li><b>Lectura:</b> estos valores describen la muestra y fijan el contexto para interpretar las pruebas siguientes; las dispersiones indican que existe variabilidad suficiente entre participantes como para que el análisis tenga sentido.</li>' +
+    '</ul>');
+
+  /* 2. Chi-cuadrado */
+  const idF = $('selChiFila').value, idC = $('selChiCol').value;
+  if (idF && idC && idF !== idC) {
+    const tab = tablaContingencia(idF, idC, datos);
+    if (tab.n && tab.filas.length > 1 && tab.cols.length > 1) {
+      const res = chiCuadrado(tab);
+      if (!res.error) {
+        const alfa = Number($('selAlfa').value);
+        const rech = res.p !== null && res.p < alfa;
+        h += caja('2 · Asociación entre ' + MAP[idF].nombre + ' y ' + MAP[idC].nombre + ' (chi-cuadrado)', '<ul>' +
+          '<li><b>Resultado:</b> χ² = ' + fmt(res.X2, 3) + ' con ' + fmtEnt(res.gl) + ' grados de libertad y valor p = ' +
+          fmtP(res.p) + ' frente a α = ' + fmt(alfa, 2) + ' → <strong>' + (rech ? 'se rechaza H₀' : 'no se rechaza H₀') + '</strong>.</li>' +
+          '<li><b>Conclusión justificada:</b> ' + (rech
+            ? 'hay evidencia de asociación entre ambas variables en la muestra: la distribución de «' + MAP[idC].nombre + '» varía según los niveles de «' + MAP[idF].nombre + '».'
+            : 'no se detecta asociación estadísticamente significativa; las diferencias observadas son compatibles con el azar.') + '</li>' +
+          '<li><b>Supuestos:</b> ' + (res.cumple ? 'se respetan (esperada mínima ' + fmt(res.minE, 2) + ').' :
+            'hay celdas con esperada &lt; 5 (' + pct(res.pctMenor5) + '), así que conviene agrupar categorías o usar una prueba exacta.') + '</li>' +
+          '<li><b>Advertencia:</b> la asociación no implica causalidad.</li></ul>');
+      }
+    }
+  }
+
+  /* 3. Correlación */
+  const idX = $('selCorrX').value, idY = $('selCorrY').value;
+  if (idX && idY && idX !== idY) {
+    const par = paresXY(idX, idY, datos);
+    if (par.xs.length >= 3) {
+      const c = pearson(par.xs, par.ys);
+      if (!c.error) {
+        const alfa = Number($('selAlfa').value);
+        const rech = c.p !== null && c.p < alfa;
+        h += caja('3 · Relación lineal entre ' + MAP[idX].nombre + ' y ' + MAP[idY].nombre + ' (Pearson)', '<ul>' +
+          '<li><b>Resultado:</b> r = ' + fmt(c.r, 4) + ' → relación <strong>' + direccionCorr(c.r) + '</strong> de intensidad <strong>' +
+          fuerzaCorr(c.r) + '</strong>; r² = ' + pct(c.r2 * 100) + ' de la variabilidad compartida. Con n = ' + fmtEnt(c.n) +
+          ', t = ' + fmt(c.t, 3) + ', gl = ' + fmtEnt(c.gl) + ', p = ' + fmtP(c.p) + ' → <strong>' +
+          (rech ? 'correlación significativa' : 'correlación no significativa') + '</strong>.</li>' +
+          '<li><b>Conclusión justificada:</b> ' + (rech
+            ? 'las variables se mueven linealmente en la dirección ' + direccionCorr(c.r) + ' y ese vínculo no se atribuye razonablemente al azar.'
+            : 'no hay respaldo suficiente para afirmar una relación lineal; cualquier tendencia observada podría ser casual.') + '</li>' +
+          '<li><b>Advertencia:</b> correlación ≠ causalidad; el resultado es compatible con factores de confusión (edad, estrés, horarios).</li></ul>');
+      }
+    }
+  }
+
+  /* 4. Regresión */
+  const m = modeloActual();
+  if (!m.error) {
+    const res = m.res;
+    const alfa = Number($('selAlfa').value);
+    const rech = res.pB1 !== null && res.pB1 < alfa;
+    const xMedia = res.mx;
+    const yEst = res.b0 + res.b1 * xMedia;
+    h += caja('4 · Modelo predictivo (regresión lineal simple)', '<ul>' +
+      '<li><b>Ecuación estimada:</b> <span class="formula">' + ecuacionTexto(res) + '</span> con R² = ' +
+      pct(res.r2 * 100, 2) + ' y error estándar ' + fmt(res.sEst, 3) + ' ' + m.vY.unidad + '.</li>' +
+      '<li><b>Pendiente:</b> por cada unidad adicional de ' + m.vX.nombre.toLowerCase() + ', ŷ ' +
+      (res.b1 >= 0 ? 'aumenta' : 'disminuye') + ' ' + fmt(Math.abs(res.b1), 4) + ' ' + m.vY.unidad +
+      ' (t = ' + fmt(res.tB1, 3) + ', p = ' + fmtP(res.pB1) + ' → ' + (rech ? 'significativa' : 'no significativa') + ').</li>' +
+      '<li><b>Ejemplo de predicción dentro del rango:</b> para x = ' + fmt(xMedia, 2) + ' ' + m.vX.unidad +
+      ' (la media observada), el modelo estima ŷ = ' + fmt(yEst, 3) + ' ' + m.vY.unidad + '. Valores fuera de ' +
+      fmt(res.minX, 2) + '–' + fmt(res.maxX, 2) + ' ' + m.vX.unidad + ' son extrapolaciones no confiables.</li>' +
+      '<li><b>Límite:</b> el modelo explica el ' + pct(res.r2 * 100, 2) + ' de la variabilidad; el ' +
+      pct((1 - res.r2) * 100, 2) + ' restante responde a otros factores y al azar.</li></ul>');
+  }
+
+  /* 5. Lo que NO se puede concluir */
+  h += caja('5 · Lo que NO se puede concluir', '<ul>' +
+    '<li><strong>No se puede afirmar causalidad:</strong> ni la correlación, ni la recta de regresión, ni la asociación chi-cuadrado demuestran que la actividad física <em>cause</em> cambios en el sueño. El diseño es transversal: no hay manipulación ni seguimiento temporal.</li>' +
+    '<li><strong>No se puede generalizar a la población:</strong> la muestra es sintética y no probabilística; los valores no representan a ninguna comunidad real.</li>' +
+    '<li><strong>No se debe leer R² como exactitud:</strong> un ' + (m.error ? 'model' : pct(m.res.r2 * 100, 2)) +
+      ' de varianza explicada deja amplio margen de error individual, por lo que las predicciones personales son imprecisas.</li>' +
+    '<li><strong>No se deben comparar medias «a ojo»:</strong> las barras de la sección de gráficos son descriptivas; la significación requiere la prueba correspondiente (t de Student o ANOVA).</li>' +
+    '<li><strong>No se deben ignorar los supuestos:</strong> si las frecuencias esperadas del chi-cuadrado son pequeñas, el valor p pierde fiabilidad.</li>' +
+    '</ul>');
+
+  /* 6. Limitaciones y rutas alternativas */
+  let faltantes = 0;
+  datos.forEach(d => VARS.forEach(v => { if (d[v.id] === null || d[v.id] === undefined) faltantes++; }));
+  h += caja('6 · Limitaciones del estudio y rutas alternativas', '<ul>' +
+    '<li><strong>Datos sintéticos:</strong> las relaciones observadas fueron generadas deliberadamente de forma moderada; sirven para practicar el procedimiento, no para conocer la realidad.</li>' +
+    '<li><strong>Autorreporte:</strong> variables como horas de sueño, estrés o calidad percibida están sujetas a error de medición y a sesgo de recordatorio.</li>' +
+    '<li><strong>Valores faltantes:</strong> hay ' + fmtEnt(faltantes) + ' celdas vacías (' +
+      pct(datos.length * VARS.length ? faltantes / (datos.length * VARS.length) * 100 : 0) +
+      '); cada análisis los excluye de forma individual (casos válidos), lo que reduce el tamaño efectivo de la muestra.</li>' +
+    '<li><strong>Tamaño muestral:</strong> con ' + fmtEnt(n) + ' registros, los efectos pequeños pueden no alcanzar significación; un poder insuficiente no demuestra ausencia de relación.</li>' +
+    '<li><strong>Rutas metodológicas alternativas:</strong> para comparar medias entre más de dos grupos, ANOVA de un factor (y pruebas post-hoc); para asociación con variables ordinales, la correlación de Spearman o la prueba de tendencia; para medir el tamaño del efecto en tablas, V de Cramér; para incluir más predictores (edad, estrés, cafeína), regresión múltiple; y para relaciones no lineales, modelos con transformaciones o splines.</li>' +
+    '</ul>');
+
+  cont.innerHTML = h;
+}
+
+/* ============================================================
+   Eventos e inicialización
+   ============================================================ */
+function poblarSelects() {
+  $('selFrecVar').innerHTML = opcionesVars(VARS, 'calidad');
+  $('selDescVar').innerHTML = opcionesVars(CUANT, 'horas_sueno');
+  $('selChiFila').innerHTML = opcionesVars(CATEG, 'af_int');
+  $('selChiCol').innerHTML = opcionesVars(CATEG, 'calidad');
+  $('selCorrX').innerHTML = opcionesVars(CUANT, 'af_min');
+  $('selCorrY').innerHTML = opcionesVars(CUANT, 'horas_sueno');
+  $('selRegX').innerHTML = opcionesVars(CUANT, 'af_min');
+  $('selRegY').innerHTML = opcionesVars(CUANT, 'horas_sueno');
+  $('selBarVar').innerHTML = opcionesVars(CATEG, 'calidad');
+  $('selHistVar').innerHTML = opcionesVars(CUANT, 'af_min');
+  $('selPieVar').innerHTML = opcionesVars(CATEG, 'af_int');
+  $('selScX').innerHTML = opcionesVars(CUANT, 'af_min');
+  $('selScY').innerHTML = opcionesVars(CUANT, 'horas_sueno');
+  $('selCompCat').innerHTML = opcionesVars(CATEG, 'af_int');
+  $('selCompCuan').innerHTML = opcionesVars(CUANT, 'horas_sueno');
+  $('selFiltroVar').innerHTML = '<option value="">— ninguna —</option>' + opcionesVars(CATEG, '');
+  $('selFiltroValor').innerHTML = '<option value="">— todos —</option>';
+}
+function actualizarValorFiltro() {
+  const v = MAP[filtroVar];
+  if (!v) { $('selFiltroValor').innerHTML = '<option value="">— todos —</option>'; $('selFiltroValor').disabled = true; return; }
+  $('selFiltroValor').disabled = false;
+  $('selFiltroValor').innerHTML = opcionesHTML(v.niveles.map(n => ({ v: n, t: n })), filtroValor);
+}
+function debounce(fn, ms) {
+  let t;
+  return function () { clearTimeout(t); t = setTimeout(fn, ms); };
+}
+function configurarScrollSpy() {
+  const links = Array.from(document.querySelectorAll('#navLinks a'));
+  const mapa = {};
+  links.forEach(a => { mapa[a.getAttribute('href').replace('#', '')] = a; });
+  if (!('IntersectionObserver' in window)) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = mapa[e.target.id];
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  document.querySelectorAll('main section').forEach(s => obs.observe(s));
+}
+function init() {
+  construirFormulario();
+  poblarSelects();
+  actualizarValorFiltro();
+
+  /* Navegación de secciones de análisis */
+  ['selFrecVar', 'selDescVar', 'selChiFila', 'selChiCol', 'selAlfa', 'selCorrX', 'selCorrY',
+   'selRegX', 'selRegY', 'selBarVar', 'selHistVar', 'selPieVar', 'selScX', 'selScY',
+   'selCompCat', 'selCompCuan', 'chkPoligono'].forEach(id => {
+    const el = $(id);
+    if (el) el.addEventListener('change', actualizarTodo);
+  });
+
+  /* Base de datos */
+  $('btnNueva').addEventListener('click', () => {
+    const n = Number($('inpN').value);
+    if (Number.isNaN(n) || n < 40 || n > 200) {
+      alert('El tamaño de la muestra debe estar entre 40 y 200 registros.');
+      return;
+    }
+    aplicarMuestra(n, Math.floor(Math.random() * 1000000000) + 1);
+  });
+  $('btnRestaurar').addEventListener('click', () => {
+    $('inpN').value = N_INICIAL;
+    aplicarMuestra(N_INICIAL, SEED_INICIAL);
+  });
+  $('btnCSV').addEventListener('click', exportarCSV);
+  $('btnImprimir').addEventListener('click', () => window.print());
+
+  $('inpBuscar').addEventListener('input', e => { filtroTexto = e.target.value.trim(); renderTabla(); });
+  $('selFiltroVar').addEventListener('change', e => {
+    filtroVar = e.target.value;
+    filtroValor = '';
+    actualizarValorFiltro();
+    renderTabla();
+  });
+  $('selFiltroValor').addEventListener('change', e => { filtroValor = e.target.value; renderTabla(); });
+  $('btnLimpiarFiltro').addEventListener('click', () => {
+    filtroTexto = ''; filtroVar = ''; filtroValor = '';
+    $('inpBuscar').value = '';
+    $('selFiltroVar').value = '';
+    actualizarValorFiltro();
+    renderTabla();
+  });
+
+  /* Cuestionario y predicción */
+  $('formCuestionario').addEventListener('submit', agregarRegistro);
+  $('inpPredX').addEventListener('input', renderPrediccion);
+  $('btnPredecir').addEventListener('click', renderPrediccion);
+
+  window.addEventListener('resize', debounce(renderGraficos, 180));
+  configurarScrollSpy();
+
+  /* Muestra inicial: ya visible con todos sus resultados al abrir */
+  aplicarMuestra(N_INICIAL, SEED_INICIAL);
+}
+init();
+</script>
+</body>
+</html>
